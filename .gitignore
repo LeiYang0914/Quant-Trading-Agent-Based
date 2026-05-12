@@ -1,0 +1,39 @@
+# OS files
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+env/
+
+# Data files (too large for git)
+*.parquet
+*.csv.gz
+*.h5
+*.hdf5
+data/
+
+# Secrets and credentials
+.env
+.env.*
+credentials.json
+*.pem
+*.key
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OSX
+.DS_Store
