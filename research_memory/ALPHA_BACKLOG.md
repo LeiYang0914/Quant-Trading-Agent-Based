@@ -6,8 +6,8 @@ Ideas queued for research, ordered by priority.
 
 | # | Idea | Market | Inspiration | Status |
 |---|---|---|---|---|
-| 01 | Open Interest Momentum Reversal — rising OI + price divergence as directional signal | Crypto | Flagged in Memo #01 | Not started |
-| 02 | Cross-sectional altcoin funding carry — long high-funding, short low-funding across top 20 alts | Crypto | Fan, Jiao, Lu, Tong (2024), SSRN:4666425 | Not started |
+| 01 | Open Interest Momentum Reversal — rising OI + price divergence as directional signal | Crypto | Flagged in Memo #01; practitioner consensus; Bessembinder & Seguin 1993 | **In progress — Memo #02** |
+| 02 | Cross-sectional altcoin funding carry — long high-funding, short low-funding across top 20 alts | Crypto | Fan, Jiao, Lu, Tong (2024), SSRN:4666425 | **Complete — Memo #03** |
 | 03 | DEX venue funding carry — Drift Protocol / ApolloX carry premium vs CEX | Crypto | ScienceDirect (2025) DEX vs CEX study | Not started |
 
 ## Medium Priority

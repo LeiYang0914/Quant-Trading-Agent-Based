@@ -40,3 +40,43 @@ Each entry: source citation, type (paper / institutional report / blog / data ve
 | 7 | Coinalyze | Aggregated open interest, liquidations | Memo #01 | Free tier |
 | 8 | Glassnode Pro | On-chain and derivatives metrics | Memo #01 | Paid |
 | 9 | CryptoQuant | Exchange flows, on-chain data | Memo #01 | Paid |
+
+## Sources Added 2026-05-14 (Memo #02)
+
+### Academic Papers
+
+| # | Citation | Type | Referenced In | Verified | Link |
+|---|---|---|---|---|---|
+| 8 | Giagkiozis & Said (2024). "Reconciling Open Interest with Traded Volume in Perpetual Swaps." Ledger, Vol. 9 | Paper | Memo #02 | Yes | https://arxiv.org/abs/2310.14973 |
+| 9 | Matsui, Al-Ali, Knottenbelt (2022). "On the Dynamics of Solid, Liquid and Digital Gold Futures." IEEE ICBC 2022 | Paper | Memo #02 | Yes | https://arxiv.org/abs/2202.09845 |
+| 10 | Chen, Ma, Nie (2024). "Exploring the Impact: How Decentralized Exchange Designs Shape Traders' Behavior on Perpetual Future Contracts." | Paper | Memo #02 | Yes | https://arxiv.org/abs/2402.03953 |
+| 11 | Bessembinder & Seguin (1993). "Price Volatility, Trading Volume, and Market Depth: Evidence from Futures Markets." JFQA, Vol. 28, No. 1 | Paper | Memo #02 | Yes | https://www.jstor.org/stable/2331234 |
+
+### Practitioner / Institutional Sources
+
+| # | Source | Type | Referenced In | Verified | Link |
+|---|---|---|---|---|---|
+| 3 | Wikipedia — "Open interest" (four-quadrant framework) | Encyclopedia | Memo #02 | Yes | https://en.wikipedia.org/wiki/Open_interest |
+| 4 | CryptoSlate — Open Interest Tag Archive | News/Analysis | Memo #02 | Yes | https://cryptoslate.com/tag/open-interest/ |
+| 5 | Crypto-News-Flash — CME Bitcoin OI Analysis | News/Analysis | Memo #02 | Yes | https://crypto-news-flash.com/glossary/open-interest/ |
+| 6 | Medium / Coinmonks — "OI and Funding Rate: The Two Market Signals Most Crypto Traders Ignore" | Blog | Memo #02 | Yes | https://medium.com/tag/open-interest |
+| 7 | Glassnode Insights — Market Pulse | Institutional Research | Memo #02 | Yes | https://insights.glassnode.com/ |
+
+### Data Vendors & Tools
+
+| # | Name | What It Provides | Referenced In | Notes |
+|---|---|---|---|---|
+| 10 | CoinGlass | Multi-exchange aggregated OI, funding rates, liquidations, long/short ratio | Memo #02, Memo #03 | Free tier; API paid. OI-weighted aggregation across exchanges. |
+| 11 | CoinGecko API | Cryptocurrency market cap, circulating supply, trading volume (daily) | Memo #03 | Free tier; used for point-in-time universe construction by market cap rank. `GET /api/v3/coins/markets`.
+
+## Sources Added 2026-05-14 (Memo #03)
+
+### Data Vendors & Tools
+
+| # | Name | What It Provides | Referenced In | Notes |
+|---|---|---|---|---|
+| 11 | CoinGecko API | Cryptocurrency market cap, circulating supply, trading volume (daily) | Memo #03 | Free tier; used for point-in-time universe construction by market cap rank. `GET /api/v3/coins/markets`.
+
+### Note on Existing Sources Reused
+
+Memo #03 reuses seven academic and institutional sources previously verified and tracked for Memo #01: Fan et al. 2024 (#4), Schmeling et al. 2023 (#2), Inan 2025 (#6), Liu et al. 2022 (#7), ScienceDirect 2025 (Institutional #2), He et al. 2022 (#1), and Ackerer et al. 2025 (#5). No new academic papers were added. The CoinGlass data vendor entry (#10) was updated to reflect usage in both Memo #02 and Memo #03.

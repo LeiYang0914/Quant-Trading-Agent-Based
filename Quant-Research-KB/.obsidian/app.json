@@ -1,0 +1,13 @@
+{
+  "showInlineTitle": true,
+  "defaultViewMode": "source",
+  "livePreview": false,
+  "showLineNumber": false,
+  "spellcheck": false,
+  "attachmentFolderPath": "99_Attachments",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "00_Inbox",
+  "alwaysUpdateLinks": true,
+  "promptDelete": true,
+  "showUnsupportedFiles": false
+}
