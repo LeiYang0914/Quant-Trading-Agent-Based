@@ -77,7 +77,17 @@
       "WebFetch(domain:blog.galaxy.com)",
       "WebFetch(domain:www.kraken.com)",
       "WebFetch(domain:ambrus.studio)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(Select-Object -ExpandProperty Name)",
+      "PowerShell(Get-ChildItem -Recurse -File | ForEach-Object { $_.FullName.Replace\\(\"$pwd\\\\\", \"\"\\).Replace\\(\"\\\\\", \"/\"\\) } | Sort-Object)",
+      "Bash(git mv *)",
+      "Bash(git rm *)",
+      "PowerShell(Get-ChildItem -Recurse -Directory | ForEach-Object { $_.FullName.Replace\\(\"$pwd\\\\\", \"\"\\).Replace\\(\"\\\\\", \"/\"\\) } | Sort-Object)",
+      "WebFetch(domain:www.glassnode.com)",
+      "WebFetch(domain:binance-docs.github.io)",
+      "WebFetch(domain:docs.coinglass.com)",
+      "WebFetch(domain:coinglass.com)",
+      "WebFetch(domain:developers.binance.com)"
     ]
   }
 }

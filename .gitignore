@@ -16,7 +16,8 @@ env/
 *.csv.gz
 *.h5
 *.hdf5
-data/
+# Only ignore data/ at root level (not src/data/, configs/data/, tests/data/)
+/data/
 
 # Secrets and credentials
 .env
