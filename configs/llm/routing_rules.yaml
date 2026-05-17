@@ -1,0 +1,137 @@
+# LLM Routing Rules
+# ==================
+# Defines which provider handles which task types.
+# Override rules are applied in the order listed by the router.
+
+# ── Default task-type routing ─────────────────────────────
+
+claude_default_tasks:
+  - SYSTEM_ARCHITECTURE
+  - RESEARCH_REASONING
+  - PAPER_ANALYSIS
+  - ALPHA_IDEA_GENERATION
+  - CODE_PLANNING
+  - CODE_GENERATION
+  - CODE_REVIEW
+  - DEBUGGING
+  - RISK_REVIEW
+  - MEMO_WRITING
+
+deepseek_default_tasks:
+  - SUMMARIZATION
+  - TEXT_CLEANUP
+  - WEB_SOURCE_SCREENING
+  - DATA_GRABBING
+  - GIT_ACTIVITY_SUMMARY
+  - CLASSIFICATION
+  - MEMORY_UPDATE
+
+# ── Agent-level preferences ───────────────────────────────
+
+claude_preferred_agents:
+  - review-agent
+  - risk-agent
+  - programmer-agent
+
+# ── Dynamic overrides (applied in this order) ─────────────
+
+overrides:
+  - condition: "requires_code == true"
+    route_to: claude
+    reason: "Code tasks require careful reasoning"
+
+  - condition: "task_type == RISK_REVIEW"
+    route_to: claude
+    reason: "Risk review always routes to Claude"
+
+  - condition: "complexity == high"
+    route_to: claude
+    reason: "High-complexity tasks route to Claude"
+
+  - condition: "requires_long_context == true"
+    route_to: claude
+    reason: "Long-context tasks route to Claude"
+
+  - condition: "cost_sensitive == true AND complexity == low"
+    route_to: deepseek
+    reason: "Cost-sensitive low-complexity tasks use DeepSeek"
+
+# ── Fallback rules ────────────────────────────────────────
+
+fallback_rules:
+  claude_to_deepseek:
+    allowed: true
+    blocked_for:
+      - CODE_GENERATION
+      - CODE_PLANNING
+      - CODE_REVIEW
+      - DEBUGGING
+      - RISK_REVIEW
+    note: "Claude→DeepSeek blocked for code and risk tasks unless explicitly_allowed is set"
+
+  deepseek_to_claude:
+    allowed: true
+    note: "DeepSeek→Claude always allowed as fallback"
+
+# ── Safety constraints ────────────────────────────────────
+
+safety:
+  never_route_risk_to_low_cost: true
+  risk_agent_prefers: claude
+  review_agent_prefers: claude
+  programmer_agent_prefers: claude
+  research_agent_final_synthesis: claude
+  research_agent_source_prescreening: deepseek
+  data_agent_simple_retrieval: deepseek
+  data_agent_complex_architecture: claude
+
+# ── Cache exclusions ──────────────────────────────────────
+
+cache_exclusions:
+  never_cache:
+    - CODE_GENERATION
+    - CODE_PLANNING
+    - CODE_REVIEW
+    - DEBUGGING
+    - RISK_REVIEW
+  never_cache_if_metadata:
+    no_cache: true
+
+# ── Explicit per-agent per-activity mappings ──────────────
+
+agent_activity_routing:
+  research_agent:
+    source_pre_screening: deepseek
+    paper_analysis: claude
+    memo_synthesis: claude
+    memo_writing: claude
+    formatting: deepseek
+    final_synthesis: claude
+    discovery_note: claude
+    source_discovery: deepseek
+    memory_update: deepseek
+
+  review_agent:
+    idea_evaluation: claude
+    overlap_detection: claude
+    approval_decision: claude
+
+  programmer_agent:
+    code_generation: claude
+    code_planning: claude
+    debugging: claude
+    test_generation: claude
+    backtest_report_formatting: deepseek
+
+  data_agent:
+    simple_data_fetch: deepseek
+    data_formatting: deepseek
+    data_quality_analysis: claude
+    architecture_planning: claude
+    api_adapter_generation: claude
+
+  risk_agent:
+    risk_review: claude
+    position_sizing: claude
+    kill_switch_config: claude
+    risk_report_formatting: claude

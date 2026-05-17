@@ -4,6 +4,126 @@ Dated entries for each research session.
 
 ---
 
+## 2026-05-17 — LLM Router Production Upgrade (Session 6)
+
+**Session type:** Architecture — infrastructure upgrade
+
+### Activity
+
+Upgraded the LLM Router from skeleton to production-style implementation. All 12 parts completed: real SDK wiring, caching, rate limiting, circuit breaker, usage tracking, task classification improvements, `ask()` API, health checks, CLI tool, config improvements, documentation, and comprehensive tests.
+
+### Changes Made
+
+**Real SDK wiring (`src/llm/providers/`):**
+- `claude_provider.py` — Real Anthropic SDK integration with graceful degradation when SDK or API key is absent. Extracts token counts from API response usage object.
+- `deepseek_provider.py` — Real OpenAI-compatible SDK integration. Configurable `base_url`. Graceful degradation on missing SDK/API key.
+- Both providers include `health_details()` for structured health reporting.
+
+**New utility modules (`src/llm/utils/`):**
+- `cache.py` — ResponseCache: file-based JSON index, SHA-256 keyed, TTL with LRU eviction. Excludes code/risk tasks.
+- `rate_limiter.py` — RateLimiter: sliding-window per-provider rate limiting, configurable RPM
+- `circuit_breaker.py` — CircuitBreaker: CLOSED→OPEN→HALF_OPEN→CLOSED state machine with configurable thresholds
+- `usage_tracker.py` — UsageTracker: JSONL-based cost/performance logging with aggregation methods
+
+**Router upgrade (`src/llm/router.py`):**
+- Integrated all new utilities into routing pipeline
+- Cache lookup → circuit breaker → rate limiter → invoke → cache write → record usage
+- `router.ask()` — convenience method with auto-classification
+- `router.health_check()` — structured per-provider health status
+- `router.get_usage_summary()` — aggregated cost/performance stats
+- `router.clear_cache()`, `router.clear_usage()`, `router.reset_circuits()`, `router.reset_rate_limiters()`
+
+**CLI tool:** `scripts/llm_router_cli.py` with --health-check, --usage-summary, --clear-cache, etc.
+
+**Tests (112 passing, +59 new):**
+- `tests/llm/test_cache.py` — 13 tests
+- `tests/llm/test_rate_limiter.py` — 8 tests
+- `tests/llm/test_circuit_breaker.py` — 11 tests
+- `tests/llm/test_usage_tracker.py` — 11 tests
+- `tests/llm/test_router_advanced.py` — 16 tests
+- Fixed 1 pre-existing test parameter mismatch (`code_required` → `requires_code`)
+
+**Documentation updated:**
+- `system/architecture/llm_router_design.md` — Added caching, rate limiting, circuit breaker, usage tracking, ask() API, health check, CLI sections
+- `system/protocols/llm_routing_protocol.md` — Added ask() API, caching rules, rate limiting, circuit breaker, health check, usage summary, CLI sections
+- `memory/SYSTEM_MAP.md` — Added all new modules, tests, and CLI script
+
+### Key Design Decisions
+
+- Cache disabled during dry_run to prevent placeholder pollution
+- Circuit breaker integrated into guard pipeline before provider invocation
+- Rate limiter skips providers with exhausted windows
+- CODE_GENERATION, CODE_PLANNING, CODE_REVIEW, DEBUGGING, RISK_REVIEW never cached
+- Fallback skips providers with open circuit or rate limit
+- All provider configs live in `configs/llm/models.yaml`
+
+### No Core Trading Logic Modified
+
+Purely infrastructure — no strategy code, no backtests, no trading decisions.
+
+### Next Session
+
+System is ready for agent-level integration testing. Wire real API keys and test actual provider calls through the router.
+
+---
+
+## 2026-05-17 — LLM Router Infrastructure Layer Implementation (Session 5)
+
+**Session type:** Architecture — infrastructure implementation
+
+### Activity
+
+Built the LLM Router infrastructure layer that sits beneath all five agents. Agents do not call LLM providers directly — they submit task requests to the router.
+
+### Changes Made
+
+**New package `src/llm/`:**
+- `types.py` — TaskType enum (17 types), TaskRequest, RoutingDecision, LLMResponse dataclasses
+- `router.py` — LLMRouter with routing logic, fallback handling, dry_run mode, decision logging
+- `providers/base.py` — BaseProvider abstract interface
+- `providers/claude_provider.py` — ClaudeProvider skeleton (reads ANTHROPIC_API_KEY from env)
+- `providers/deepseek_provider.py` — DeepSeekProvider skeleton (reads DEEPSEEK_API_KEY from env)
+- `prompts/task_classifier.py` — Keyword-based task classification heuristics
+- `utils/logging.py` — RoutingLogger (JSONL audit log)
+- `utils/cost_estimator.py` — Rough per-call cost estimation
+
+**Configuration:**
+- `configs/llm/models.yaml` — Provider model configs (Claude: sonnet/opus/haiku, DeepSeek: v4-pro/v4-flash)
+- `configs/llm/routing_rules.yaml` — Task-type defaults, overrides, fallback rules, per-agent activity mappings
+
+**Tests (46 passing):**
+- `tests/llm/test_router.py` — 30 tests: routing Claude/DeepSeek, explicit preference, dry run
+- `tests/llm/test_task_classification.py` — 16 tests: keyword classification, complexity inference
+- `tests/llm/test_fallbacks.py` — 6 tests: fallback permissions, fallback decisions
+
+**Documentation:**
+- `system/architecture/llm_router_design.md` — Full architecture with diagram, provider abstraction, routing criteria, fallback rules, per-agent usage table, future improvements
+- `system/protocols/llm_routing_protocol.md` — How agents request LLM calls, required fields, routing decision process, Claude/DeepSeek usage rules, forbidden behavior
+- `templates/llm_task_request.md` — Template with required/recommended fields and 4 example requests per agent
+- `templates/llm_routing_log.md` — Decision/response/fallback log entry formats with field reference
+
+**Updated files:**
+- `system/architecture/system_overview.md` — Added LLM Router to architecture diagram, directory map, and invariants
+- All 5 agent specs — Added "LLM Router Usage" section with provider-per-activity tables
+- `memory/` files — PROJECT_STATE.md, RESEARCH_LOG.md, DECISIONS.md, SYSTEM_MAP.md
+
+### Key Design Decisions
+
+- Claude handles all high-complexity reasoning, code tasks, and risk-critical decisions
+- DeepSeek handles summarization, text cleanup, source screening, and cost-efficient tasks
+- Code generation never falls back Claude→DeepSeek by default
+- Risk Agent and Review Agent always route to Claude
+- Router supports dry_run mode for testing without real API calls
+- All routing decisions logged to `reports/llm_routing/routing_log.jsonl`
+- API keys read from environment variables (ANTHROPIC_API_KEY, DEEPSEEK_API_KEY) — never hardcoded
+- Provider skeletons are clearly marked TODO for real SDK wiring
+
+### Next Session
+
+Run the router in dry_run mode with sample tasks from all five agents to verify routing correctness. Wire in real Anthropic SDK when API key is available.
+
+---
+
 ## 2026-05-16 — CRYPTO-002 Research Session: Full 9-Skill Sequence
 
 **Session type:** Alpha research

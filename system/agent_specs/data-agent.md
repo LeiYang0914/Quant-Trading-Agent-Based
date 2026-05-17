@@ -75,3 +75,12 @@ Data Agent
     │
     └── writes ──→ reports/data_quality/
 ```
+
+## LLM Router Usage
+
+All LLM calls go through `src/llm/LLMRouter`. This agent never calls providers directly.
+
+| Activity | Provider | Rationale |
+|----------|----------|-----------|
+| Simple data fetching, formatting, documentation | DeepSeek | Cost-efficient for repetitive, low-risk tasks |
+| Complex data architecture, quality analysis, API adapter generation | Claude | High-complexity infrastructure work requires careful reasoning |

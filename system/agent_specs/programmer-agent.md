@@ -71,3 +71,12 @@ Programmer Agent
     │
     └── moves ──→ handoffs/completed/ (done)
 ```
+
+## LLM Router Usage
+
+All LLM calls go through `src/llm/LLMRouter`. This agent never calls providers directly.
+
+| Activity | Provider | Rationale |
+|----------|----------|-----------|
+| Code generation, planning, debugging, review, test generation | Claude | Code requires careful reasoning and correctness |
+| Backtest report formatting | DeepSeek | Low-risk formatting and cleanup tasks |

@@ -104,3 +104,13 @@ Risk Agent
 ```
 
 The Risk Agent is the **final gate**. No other agent can override its decision.
+
+## LLM Router Usage
+
+All LLM calls go through `src/llm/LLMRouter`. This agent never calls providers directly.
+
+| Activity | Provider | Rationale |
+|----------|----------|-----------|
+| Risk review, position sizing, kill switch config, all approval decisions | Claude | Risk decisions are the final gate — no low-cost fallback |
+| Risk report formatting | Claude | Risk report formatting stays on Claude for consistency |
+| (No DeepSeek usage by default) | — | Risk-critical tasks never route to low-cost models by default |

@@ -1,0 +1,99 @@
+# LLM Provider Model Configuration
+# ===================================
+# Edit this file to change model names, timeouts, and provider settings.
+# Do NOT put API keys here — use environment variables:
+#   ANTHROPIC_API_KEY for Claude
+#   DEEPSEEK_API_KEY  for DeepSeek
+
+claude:
+  provider: anthropic
+  base_url: https://api.anthropic.com
+  default_model: claude-sonnet-4-6
+  complex_model: claude-sonnet-4-6
+  long_context_model: claude-sonnet-4-6
+  models:
+    - claude-opus-4-7
+    - claude-sonnet-4-6
+    - claude-haiku-4-5-20251001
+  # Aliases for convenience
+  aliases:
+    opus: claude-opus-4-7
+    sonnet: claude-sonnet-4-6
+    haiku: claude-haiku-4-5-20251001
+  timeout_seconds: 120
+  max_tokens_default: 4096
+  max_tokens_long_context: 8192
+  temperature_default: 0.3
+  temperature_creative: 0.7
+  max_retries: 1
+
+deepseek:
+  provider: deepseek
+  base_url: https://api.deepseek.com
+  default_model: deepseek-v4-flash
+  stronger_model: deepseek-v4-pro
+  models:
+    - deepseek-v4-pro
+    - deepseek-v4-flash
+  # Aliases for convenience
+  aliases:
+    pro: deepseek-v4-pro
+    flash: deepseek-v4-flash
+  timeout_seconds: 60
+  max_tokens_default: 4096
+  max_tokens_long_context: 8192
+  temperature_default: 0.3
+  temperature_creative: 0.7
+  max_retries: 1
+
+# ── Rate limiting (per provider) ──────────────────────────
+
+rate_limits:
+  claude:
+    requests_per_minute: 30
+    enabled: true
+  deepseek:
+    requests_per_minute: 60
+    enabled: true
+
+# ── Circuit breaker ───────────────────────────────────────
+
+circuit_breaker:
+  enabled: true
+  failure_threshold: 3        # consecutive failures to open circuit
+  cooldown_seconds: 300       # wait before trying again (5 min)
+  half_open_max_requests: 1   # max requests when half-open before deciding
+
+# ── Response caching ──────────────────────────────────────
+
+cache:
+  enabled: true
+  ttl_seconds: 86400          # 24 hours
+  cache_dir: ".cache/llm"     # relative to project root
+  max_entries: 10000
+  # Tasks NEVER cached
+  never_cache:
+    - CODE_GENERATION
+    - CODE_PLANNING
+    - CODE_REVIEW
+    - DEBUGGING
+    - RISK_REVIEW
+  # Cache key includes these metadata fields
+  key_fields:
+    - provider
+    - model
+    - task_type
+    - prompt_hash
+    - agent_name
+
+# ── Task-specific model overrides ─────────────────────────
+
+task_model_overrides:
+  RISK_REVIEW:
+    claude: claude-sonnet-4-6
+  PAPER_ANALYSIS:
+    claude: claude-sonnet-4-6
+  CODE_GENERATION:
+    claude: claude-sonnet-4-6
+  DEBUGGING:
+    claude: claude-sonnet-4-6

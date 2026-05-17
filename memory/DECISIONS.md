@@ -24,6 +24,66 @@ Important project decisions and their rationale.
 
 ---
 
+## 2026-05-17 — LLM Router Production Upgrade
+
+### Decision: Response caching with code/risk task exclusions
+**What:** File-based JSON response cache keyed by hash of provider + model + task_type + prompt. CODE_GENERATION, CODE_PLANNING, CODE_REVIEW, DEBUGGING, and RISK_REVIEW are never cached.
+**Why:** Cache reduces duplicate API costs for idempotent tasks (summarization, classification, memory updates). Code and risk tasks produce non-deterministic outputs that should not be cached — stale code could contain bugs, stale risk reviews could miss new market conditions.
+
+### Decision: Cache disabled during dry_run mode
+**What:** Cache.put() and .get() are bypassed when router is in dry_run mode.
+**Why:** Prevents placeholder responses from polluting the cache, which would cause subsequent real calls to return dummy data.
+
+### Decision: Circuit breaker with CLOSED→OPEN→HALF_OPEN→CLOSED state machine
+**What:** Per-provider circuit breaker trips after 3 consecutive failures (configurable). After 5-minute cooldown (configurable), allows one probe request in HALF_OPEN state. Success returns to CLOSED; failure re-opens.
+**Why:** Prevents cascading failures when a provider is down. Without a circuit breaker, every failed request would retry the down provider, adding latency and consuming rate limit budget.
+
+### Decision: Sliding-window rate limiting per provider
+**What:** In-memory sliding-window rate limiter with configurable requests_per_minute per provider. Skipped providers with exhausted windows during routing.
+**Why:** Prevents API quota exhaustion. When the limit is hit, the router falls back to the alternative provider rather than failing.
+
+### Decision: `router.ask()` as convenience API for simple cases
+**What:** `ask()` accepts a prompt and auto-classifies the task type, complexity, domain, etc. Supports optional overrides for all fields.
+**Why:** Reduces boilerplate for common agent requests. Agents can call `router.ask(prompt="Summarize this", agent_name="research-agent")` instead of constructing a full TaskRequest.
+
+### Decision: Graceful provider degradation on missing SDKs
+**What:** Both ClaudeProvider and DeepSeekProvider return structured error responses when the SDK is not installed or API key is missing, rather than crashing.
+**Why:** The system must remain operational for testing and development without requiring both SDKs to be installed or both API keys to be configured.
+
+---
+
+## 2026-05-17 — LLM Router Architecture
+
+### Decision: Add LLM Router as shared infrastructure beneath all five agents
+**What:** A central LLM Router layer (`src/llm/`) that all agents use for LLM calls. Agents never call providers directly.
+**Why:** Centralized routing enables consistent cost control, model selection by task type, fallback handling, and audit logging. Without a router, each agent would independently decide which model to use, leading to inconsistent decisions and untracked costs.
+
+### Decision: Claude for complex tasks, DeepSeek for cost-efficient throughput
+**What:** Tasks are split: Claude handles system architecture, research reasoning, paper analysis, alpha generation, code planning/generation/review, debugging, high-complexity, and risk-critical decisions. DeepSeek handles summarization, text cleanup, source screening, data grabbing, git summaries, classification, and memory updates.
+**Why:** Claude models excel at careful reasoning and code generation. DeepSeek models offer competitive performance at lower cost for simpler, repetitive tasks. Splitting by task type optimizes cost without degrading quality on work that matters.
+
+### Decision: Code generation never falls back Claude→DeepSeek by default
+**What:** The router blocks fallback from Claude to DeepSeek for CODE_GENERATION, CODE_PLANNING, CODE_REVIEW, and DEBUGGING task types. Fallback is only allowed if the agent explicitly sets `fallback_allowed_for_code_tasks` in metadata.
+**Why:** Code quality is critical — a cheaper model producing subtly incorrect code could introduce bugs into trading strategies. The cost savings are not worth the risk.
+
+### Decision: Risk Agent and Review Agent always route to Claude
+**What:** Both gate agents (Review — quality gate, Risk — safety gate) are hard-coded to prefer Claude regardless of task type. No low-cost fallback for their decisions.
+**Why:** These agents make high-stakes go/no-go decisions. Review approves ideas for implementation; Risk approves strategies for paper trading. Neither decision should be made by a lower-capability model.
+
+### Decision: Dry run mode as default for testing
+**What:** The router defaults to `dry_run=True`. Provider skeletons return placeholder responses. Full routing logic executes, decisions are logged, but no real API calls are made.
+**Why:** Enables testing routing logic, fallback behavior, and agent integration without consuming API credits or requiring API keys.
+
+### Decision: API keys via environment variables only
+**What:** `ANTHROPIC_API_KEY` and `DEEPSEEK_API_KEY` read from environment. Never stored in config files, never committed to git.
+**Why:** Security. Config files are committed; environment variables are not.
+
+### Decision: Provider-specific code isolated in `src/llm/providers/`
+**What:** Each provider has its own file implementing `BaseProvider`. Adding a new provider means adding one new file and one entry in `models.yaml`.
+**Why:** Extensibility. The router logic is provider-agnostic.
+
+---
+
 ## 2026-05-14 — Cross-Sectional vs. Absolute Carry Distinction
 
 ### Decision: Cross-sectional funding carry is a carry CAPTURE strategy, not a reversal strategy

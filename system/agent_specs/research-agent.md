@@ -158,3 +158,12 @@ Research Agent
     │
     └── writes ──→ knowledge/Quant-Research-KB/
 ```
+
+## LLM Router Usage
+
+All LLM calls go through `src/llm/LLMRouter`. This agent never calls providers directly.
+
+| Activity | Provider | Rationale |
+|----------|----------|-----------|
+| Final reasoning, memo synthesis, paper analysis, discovery notes | Claude | High-complexity research requires careful reasoning |
+| Source pre-screening, formatting, lightweight summaries | DeepSeek | Cost-efficient, repetitive, low-risk tasks |

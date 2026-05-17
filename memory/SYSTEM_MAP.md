@@ -94,11 +94,13 @@ research/
 ### `system/` — System Documentation
 | Path | Purpose |
 |------|---------|
-| `architecture/system_overview.md` | Full system architecture with agent diagram |
+| `architecture/system_overview.md` | Full system architecture with agent diagram and LLM Router |
+| `architecture/llm_router_design.md` | LLM Router architecture: provider abstraction, routing, fallback |
 | `architecture/obsidian_integration_design.md` | Obsidian vault integration design |
 | `workflows/alpha_lifecycle.md` | Complete alpha lifecycle from idea to live candidate |
 | `protocols/research_protocol.md` | Research Agent 10-step workflow with quality gates |
 | `protocols/handoff_protocol.md` | Inter-agent handoff formats and rules |
+| `protocols/llm_routing_protocol.md` | LLM routing protocol: request format, rules, fallback, forbidden behavior |
 | `agent_specs/research-agent.md` | Research Agent detailed specification |
 | `agent_specs/review-agent.md` | Review Agent detailed specification |
 | `agent_specs/programmer-agent.md` | Programmer Agent detailed specification |
@@ -117,9 +119,22 @@ research/
 | `agent_specs/research_agent_skills/handoff_preparation_skill.md` | Skill 9: Prepare review and programmer handoffs |
 | `agent_specs/research_agent_skills/research_memory_update_skill.md` | Skill 10: Update all memory files |
 
-### `src/` — Source Code (future implementation)
+### `src/` — Source Code
 | Path | Purpose |
 |------|---------|
+| `llm/` | **LLM Router — infrastructure layer (implemented 2026-05-17)** |
+| `llm/router.py` | Core LLMRouter: routing, fallback, caching, circuit breaker, ask() API |
+| `llm/types.py` | TaskType (19 types), TaskRequest, RoutingDecision, LLMResponse types |
+| `llm/providers/base.py` | BaseProvider abstract interface (call, validate_config, health_check) |
+| `llm/providers/claude_provider.py` | Claude (Anthropic) provider — real SDK wiring, graceful degradation |
+| `llm/providers/deepseek_provider.py` | DeepSeek provider — OpenAI-compatible SDK, graceful degradation |
+| `llm/prompts/task_classifier.py` | Keyword-based task classification, complexity/cost/long-context inference |
+| `llm/utils/logging.py` | RoutingLogger — JSONL audit log |
+| `llm/utils/cost_estimator.py` | Rough per-call cost estimation |
+| `llm/utils/cache.py` | ResponseCache — file-based JSON index with TTL, eviction, exclusions |
+| `llm/utils/rate_limiter.py` | RateLimiter — sliding-window per-provider rate limiting |
+| `llm/utils/circuit_breaker.py` | CircuitBreaker — CLOSED→OPEN→HALF_OPEN→CLOSED state machine |
+| `llm/utils/usage_tracker.py` | UsageTracker — JSONL-based cost/performance tracking with aggregation |
 | `data/` | Data loaders, API adapters, vendor integrations |
 | `signals/` | Signal/alpha implementations |
 | `backtest/` | Backtest engines and utilities |
@@ -128,17 +143,32 @@ research/
 | `portfolio/` | Portfolio construction and optimization |
 | `utils/` | Shared utilities |
 
-### `configs/` — Configuration (future)
+### `scripts/` — CLI and Utility Scripts
 | Path | Purpose |
 |------|---------|
+| `scripts/llm_router_cli.py` | LLM Router CLI: health check, usage summary, cache management |
+
+### `configs/` — Configuration
+| Path | Purpose |
+|------|---------|
+| `llm/models.yaml` | LLM provider model configs (Claude, DeepSeek) |
+| `llm/routing_rules.yaml` | Routing rules, overrides, fallback, per-agent mappings |
 | `markets/` | Market definitions, trading hours, contract specs |
 | `strategies/` | Strategy parameters (lookbacks, thresholds, weights) |
 | `data/` | Data vendor configs, fee schedules, slippage models |
 | `risk/` | Risk limits, position sizing rules, kill switches |
 
-### `tests/` — Tests (future)
+### `tests/` — Tests
 | Path | Purpose |
 |------|---------|
+| `llm/test_router.py` | LLM Router routing decision tests (30 tests) |
+| `llm/test_router_advanced.py` | Advanced router tests: ask(), health, cache, circuits (16 tests) |
+| `llm/test_task_classification.py` | Task classifier keyword and complexity tests (16 tests) |
+| `llm/test_fallbacks.py` | Fallback behavior and permissions tests (6 tests) |
+| `llm/test_cache.py` | Response cache operations and exclusions (13 tests) |
+| `llm/test_circuit_breaker.py` | Circuit breaker state machine tests (11 tests) |
+| `llm/test_rate_limiter.py` | Rate limiter acquire/block/reset tests (8 tests) |
+| `llm/test_usage_tracker.py` | Usage tracker recording and aggregation tests (11 tests) |
 | `data/` | Data loader tests |
 | `signals/` | Signal logic tests |
 | `backtest/` | Backtest correctness tests |
@@ -147,6 +177,7 @@ research/
 ### `reports/` — Reports
 | Path | Purpose |
 |------|---------|
+| `llm_routing/` | LLM Router decision audit logs (JSONL) |
 | `backtests/` | Backtest reports from Programmer Agent |
 | `paper_trading/` | Paper trading performance reports |
 | `risk_reviews/` | Risk review reports from Risk Agent |
@@ -170,3 +201,5 @@ research/
 | `backtest_report.md` | Backtest results report template |
 | `data_quality_report.md` | Data quality report template |
 | `risk_review.md` | Risk review report template |
+| `llm_task_request.md` | LLM Router task request template with examples |
+| `llm_routing_log.md` | LLM routing log entry formats and field reference |

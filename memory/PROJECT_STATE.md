@@ -1,6 +1,6 @@
 # Project State
 
-**Last updated:** 2026-05-16
+**Last updated:** 2026-05-17
 
 ## Current Default Research Domain
 
@@ -23,7 +23,7 @@ Project is active. Three crypto research memos exist:
 
 ## System Architecture
 
-Five-agent Quant Trading AI System:
+Five-agent Quant Trading AI System with shared LLM Router infrastructure:
 
 | Agent | Purpose | Status |
 |-------|---------|--------|
@@ -32,6 +32,7 @@ Five-agent Quant Trading AI System:
 | Programmer Agent | Implement approved ideas, run backtests | Defined, not yet active |
 | Data Agent | Data sourcing, quality, execution simulation | Defined, not yet active |
 | Risk Agent | Final risk gate, position sizing, kill switches | Defined, not yet active |
+| **LLM Router** | **Infrastructure: routes agent tasks to Claude or DeepSeek** | **Implemented 2026-05-17** |
 
 ## Active Research
 
@@ -77,6 +78,8 @@ None currently.
 
 ## Recent Changes
 
+- 2026-05-17 (session 6): **LLM Router production upgrade.** Upgraded router from skeleton to production-style with: real Anthropic/OpenAI SDK wiring with graceful degradation, response caching with file-based JSON index, sliding-window rate limiting per provider, circuit breaker (CLOSED→OPEN→HALF_OPEN→CLOSED), usage/cost tracking with JSONL logging, improved task classification (MEMO_WRITING, RISK_REVIEW, domain hints), `router.ask()` convenience API with auto-classification, `router.health_check()` returning structured per-provider status, `router.get_usage_summary()` for cost analytics, CLI tool (`scripts/llm_router_cli.py`), and config improvements (task-model overrides, rate limits, circuit breaker params). Added 59 new tests across 5 test files (cache, rate limiter, circuit breaker, usage tracker, router advanced). All 112 tests passing. Updated architecture docs, protocol docs, and SYSTEM_MAP. No core trading logic modified.
+- 2026-05-17 (session 5): **LLM Router infrastructure layer.** Added full LLM Router architecture under `src/llm/`. Created provider abstraction (ClaudeProvider, DeepSeekProvider), routing rules with task-type-based routing, fallback logic, structured logging, and cost estimation. Added `configs/llm/models.yaml` and `routing_rules.yaml`. Created `tests/llm/` with 46 tests (all passing). Added architecture doc (`system/architecture/llm_router_design.md`), protocol doc (`system/protocols/llm_routing_protocol.md`), and two templates. Updated all 5 agent specs with LLM Router usage tables. Updated `system/architecture/system_overview.md` with Router layer. No core trading logic modified.
 - 2026-05-16 (session 4): **CRYPTO-002 upgraded to ready_for_review.** Ran full 9-skill sequence on CRYPTO-002. Created alpha discovery note (was missing). Updated memo to 19-section template. Wrote 4 paper summaries. Ran 20-item QC (all pass). Moved from needs_data_check to ready_for_review. Created Research Agent skills layer (10 skills + README) as system infrastructure.
 - 2026-05-15 (session 3): **Research Agent skills layer.** Created 10 modular skills: domain queue management, source discovery, paper analysis, crypto/commodities market structure, alpha discovery, memo writing, quality control, handoff prep, memory update. Master README index. Updated agent definitions, system specs, research protocol, SYSTEM_MAP.
 - 2026-05-15 (session 2): **Research Agent upgrade.** Added strict crypto/commodities domain separation, source quality tiers, alpha ID standard (CRYPTO-NNN, COMMOD-NNN, CROSS-NNN), research protocol with 10-step workflow, quality gates before ready_for_review, structured reference tracking in SOURCE_TRACKER.md, new templates (paper_summary, alpha_discovery_note, research_session_log), domain-grouped ALPHA_BACKLOG.md, and crypto-first research order. Created domain-specific subdirectories under research/ideas/.

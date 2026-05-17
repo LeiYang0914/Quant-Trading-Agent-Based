@@ -82,3 +82,12 @@ Review Agent
     │
     └── consults ──→ Data Agent (data quality)
 ```
+
+## LLM Router Usage
+
+All LLM calls go through `src/llm/LLMRouter`. This agent never calls providers directly.
+
+| Activity | Provider | Rationale |
+|----------|----------|-----------|
+| All gate decisions (evaluation, overlap, approval) | Claude | Gate decisions are high-stakes and require careful reasoning |
+| (No DeepSeek usage by default) | — | Review Agent decisions should not use low-cost models |

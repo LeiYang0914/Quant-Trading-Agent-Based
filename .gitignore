@@ -36,5 +36,10 @@ credentials.json
 # Jupyter
 .ipynb_checkpoints/
 
+# Runtime output (auto-generated)
+logs/
+.cache/
+reports/llm_routing/
+
 # OSX
 .DS_Store
