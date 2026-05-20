@@ -125,6 +125,17 @@ Default ──▶ Claude (safety)
 3. Fallback is skipped if `fallback_allowed = false` on the request.
 4. Risk Agent critical decisions: fallback to low-cost models is never allowed by default.
 
+### Forbidden Fallback (Hard Blocks)
+
+Configured in `routing_rules.yaml` under `forbidden_fallback`:
+
+- **no_fallback_tasks**: CODE_GENERATION, CODE_PLANNING, CODE_REVIEW, DEBUGGING, RISK_REVIEW
+- **no_fallback_if_code_required**: Any task with `requires_code=true`
+- **risk_never_low_cost**: Risk review never falls back to low-cost models
+- **no_fallback_agents**: Review Agent and Risk Agent tasks never fall back
+
+These rules are enforced at the router level and cannot be bypassed by metadata overrides.
+
 ## Response Caching
 
 The router caches responses to reduce duplicate API calls:

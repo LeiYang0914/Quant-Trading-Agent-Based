@@ -229,6 +229,29 @@ python scripts/llm_router_cli.py --clear-usage
 python scripts/llm_router_cli.py --reset-circuits
 ```
 
+## Forbidden Fallback Rules
+
+A `forbidden_fallback` section in `routing_rules.yaml` defines hard blocks that the router enforces:
+
+| Rule | Effect |
+|------|--------|
+| `no_fallback_tasks` | CODE_GENERATION, CODE_PLANNING, CODE_REVIEW, DEBUGGING, RISK_REVIEW never fall back |
+| `no_fallback_if_code_required` | Any task with `requires_code=true` blocks fallback |
+| `risk_never_low_cost` | Risk review tasks never fall back to low-cost providers |
+| `no_fallback_agents` | Review Agent and Risk Agent tasks never fall back (by default) |
+
+These rules cannot be bypassed by setting `metadata.override` — they are enforced at the router level.
+
+## Task Classification
+
+The task classifier (`src/llm/prompts/task_classifier.py`) uses a three-tier approach:
+
+1. **Keyword map** — ~100 keywords across 19 task types, most-specific patterns first
+2. **Activity hints** — Phrases from agent-activity routing config (e.g., "source pre-screen", "memo synthesis")
+3. **Agent-name fallback** — Defaults per agent (e.g., programmer→CODE_GENERATION, risk→RISK_REVIEW)
+
+Complexity, cost sensitivity, and long-context needs are inferred from task type, description keywords, and explicit flags.
+
 ## Future Improvements
 
 1. **Streaming support** — SSE streaming for long responses

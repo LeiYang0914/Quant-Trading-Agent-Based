@@ -10,23 +10,117 @@ from ..types import Complexity, TaskType
 
 _KEYWORD_MAP: list[tuple[TaskType, list[str]]] = [
     # More-specific matchers must come before broader ones that share substrings.
-    (TaskType.CODE_PLANNING, ["plan the code", "design the implementation", "code architecture", "how should I implement"]),
-    (TaskType.CODE_GENERATION, ["write code", "implement", "build a function", "create a script", "generate code"]),
-    (TaskType.CODE_REVIEW, ["review this code", "code review", "check this code", "audit the code"]),
-    (TaskType.DEBUGGING, ["debug", "fix this bug", "why does this error", "traceback", "stack trace"]),
-    (TaskType.RISK_REVIEW, ["risk review", "risk assessment", "review risk", "drawdown analysis", "volatility assessment", "position sizing", "kill switch"]),
-    (TaskType.MEMO_WRITING, ["write memo", "draft memo", "memo writing", "research memo", "write the memo"]),
-    (TaskType.SYSTEM_ARCHITECTURE, ["system architecture", "design the system", "infrastructure design"]),
-    (TaskType.RESEARCH_REASONING, ["research", "analyze", "investigate", "explore", "hypothesis", "mechanism"]),
-    (TaskType.PAPER_ANALYSIS, ["analyze this paper", "paper analysis", "read this paper", "understand this paper", "academic", "journal", "ssrn", "arxiv", "working paper", "literature"]),
-    (TaskType.ALPHA_IDEA_GENERATION, ["alpha idea", "trading signal", "strategy idea", "new alpha"]),
-    (TaskType.DATA_GRABBING, ["fetch data", "grab data", "download", "api call", "get the data", "pull data"]),
-    (TaskType.WEB_SOURCE_SCREENING, ["screening", "source check", "verify source", "pre-screen", "filter sources"]),
-    (TaskType.GIT_ACTIVITY_SUMMARY, ["git log", "git summary", "commit summary", "activity summary"]),
-    (TaskType.SUMMARIZATION, ["summarize", "summary", "tldr", "sum up", "brief"]),
-    (TaskType.TEXT_CLEANUP, ["format", "clean up", "reformat", "fix markdown", "lint", "cleanup"]),
-    (TaskType.CLASSIFICATION, ["classify", "categorize", "label", "tagging"]),
-    (TaskType.MEMORY_UPDATE, ["memory update", "update memory", "save to memory", "remember this"]),
+    # Code-related (ordered: plan → generate → review → debug)
+    (TaskType.CODE_PLANNING, [
+        "plan the code", "design the implementation", "code architecture",
+        "how should I implement", "plan the implementation", "architecture plan",
+        "design pattern", "system design for",
+    ]),
+    (TaskType.CODE_GENERATION, [
+        "write code", "write a function", "write a script", "write a class",
+        "build a function", "create a script", "generate code",
+        "implement a", "implement the", "implement this",
+        "code this", "code the",
+        "write the backtest", "write the test",
+        "program this", "develop a",
+    ]),
+    (TaskType.CODE_REVIEW, [
+        "review this code", "code review", "check this code",
+        "audit the code", "review the code", "look over this code",
+        "inspect this code", "review my code", "code audit",
+    ]),
+    (TaskType.DEBUGGING, [
+        "debug", "fix this bug", "fix the bug",
+        "why does this error", "traceback", "stack trace",
+        "why is this failing", "what is wrong with", "troubleshoot",
+        "why isn't this", "fix this issue", "find the bug",
+        "why does it crash",
+    ]),
+    # Risk (before general "review")
+    (TaskType.RISK_REVIEW, [
+        "risk review", "risk assessment", "review risk",
+        "drawdown analysis", "volatility assessment",
+        "position sizing", "kill switch",
+        "risk report", "risk profile", "risk limit",
+        "var calculation", "expected shortfall", "stress test",
+    ]),
+    # Memo (before general "write")
+    (TaskType.MEMO_WRITING, [
+        "write memo", "draft memo", "memo writing",
+        "research memo", "write the memo", "draft the memo",
+        "write a memo", "prepare memo",
+    ]),
+    # Architecture
+    (TaskType.SYSTEM_ARCHITECTURE, [
+        "system architecture", "design the system",
+        "infrastructure design", "architecture design",
+        "design the architecture", "architect the",
+    ]),
+    # Paper analysis (before general "research"/"analyze")
+    (TaskType.PAPER_ANALYSIS, [
+        "analyze this paper", "paper analysis", "read this paper",
+        "understand this paper", "academic paper", "journal paper",
+        "ssrn", "arxiv", "working paper", "literature review",
+        "summarize this paper", "paper summary", "extract from paper",
+    ]),
+    # Alpha generation
+    (TaskType.ALPHA_IDEA_GENERATION, [
+        "alpha idea", "trading signal", "strategy idea",
+        "new alpha", "alpha generation", "signal idea",
+        "generate alpha", "trading strategy",
+        "new trading idea", "alpha research",
+    ]),
+    # Research reasoning (broad — place after paper/alpha)
+    (TaskType.RESEARCH_REASONING, [
+        "research question", "reason about", "investigate why",
+        "explore the relationship", "hypothesis", "mechanism",
+        "what drives", "what causes", "economic rationale",
+        "market microstructure", "analyze the relationship",
+        "explain the relationship", "factor analysis",
+    ]),
+    # Data grabbing
+    (TaskType.DATA_GRABBING, [
+        "fetch data", "grab data", "download data",
+        "api call", "get the data", "pull data",
+        "retrieve data", "download the", "scrape",
+        "get ohlcv", "get market data", "query the",
+    ]),
+    # Source screening
+    (TaskType.WEB_SOURCE_SCREENING, [
+        "source screening", "source check", "verify source",
+        "pre-screen", "filter sources", "screen sources",
+        "check this source", "validate source", "verify this link",
+        "is this source reliable", "source verification",
+    ]),
+    # Git activity
+    (TaskType.GIT_ACTIVITY_SUMMARY, [
+        "git log", "git summary", "commit summary",
+        "activity summary", "git activity", "commit history",
+        "what changed", "recent changes",
+    ]),
+    # Summarization
+    (TaskType.SUMMARIZATION, [
+        "summarize", "summary", "tldr", "sum up",
+        "brief overview", "give me the gist", "in short",
+        "key points", "bullet points of",
+    ]),
+    # Text cleanup
+    (TaskType.TEXT_CLEANUP, [
+        "format this", "clean up", "reformat", "fix markdown",
+        "lint", "cleanup", "fix formatting", "fix the formatting",
+        "correct the markdown", "proper markdown",
+    ]),
+    # Classification
+    (TaskType.CLASSIFICATION, [
+        "classify", "categorize", "label these", "tagging",
+        "sort into", "group these", "assign category",
+    ]),
+    # Memory update
+    (TaskType.MEMORY_UPDATE, [
+        "memory update", "update memory", "save to memory",
+        "remember this", "update the memory", "save this to",
+        "store in memory",
+    ]),
     (TaskType.GENERAL_QA, []),
 ]
 
@@ -82,6 +176,28 @@ _AGENT_KEYWORD_HINTS: dict[str, TaskType] = {
     "review-agent": TaskType.RESEARCH_REASONING,
     "data-agent": TaskType.DATA_GRABBING,
 }
+# Sub-activity hints: within an agent, certain phrases suggest a specific task type.
+_ACTIVITY_HINTS: list[tuple[str, TaskType]] = [
+    ("source pre-screen", TaskType.WEB_SOURCE_SCREENING),
+    ("source discovery", TaskType.WEB_SOURCE_SCREENING),
+    ("source screening", TaskType.WEB_SOURCE_SCREENING),
+    ("paper analysis", TaskType.PAPER_ANALYSIS),
+    ("memo synthesis", TaskType.MEMO_WRITING),
+    ("memo writing", TaskType.MEMO_WRITING),
+    ("final synthesis", TaskType.RESEARCH_REASONING),
+    ("discovery note", TaskType.ALPHA_IDEA_GENERATION),
+    ("memory update", TaskType.MEMORY_UPDATE),
+    ("idea evaluation", TaskType.RESEARCH_REASONING),
+    ("overlap detection", TaskType.RESEARCH_REASONING),
+    ("test generation", TaskType.CODE_GENERATION),
+    ("backtest report", TaskType.SUMMARIZATION),
+    ("simple data fetch", TaskType.DATA_GRABBING),
+    ("data quality analysis", TaskType.RESEARCH_REASONING),
+    ("architecture planning", TaskType.SYSTEM_ARCHITECTURE),
+    ("api adapter", TaskType.CODE_GENERATION),
+    ("position sizing", TaskType.RISK_REVIEW),
+    ("kill switch", TaskType.RISK_REVIEW),
+]
 
 
 def classify_task(
@@ -92,9 +208,12 @@ def classify_task(
     """Classify a task description into a TaskType using keyword matching.
 
     Agent name is used as a hint when the text is ambiguous.
+    Activity hints (from agent activity routing config) provide secondary signals.
     Returns TaskType.GENERAL_QA when no strong match is found.
     """
     lowered = description.lower()
+
+    # 1. Keyword map (most specific matchers first)
     for task_type, keywords in _KEYWORD_MAP:
         if not keywords:
             continue
@@ -102,7 +221,12 @@ def classify_task(
             if kw.lower() in lowered:
                 return task_type
 
-    # Agent-name hint for ambiguous tasks
+    # 2. Activity hints (semi-specific phrases)
+    for phrase, task_type in _ACTIVITY_HINTS:
+        if phrase in lowered:
+            return task_type
+
+    # 3. Agent-name hint for truly ambiguous text
     if agent_name and agent_name.lower().strip() in _AGENT_KEYWORD_HINTS:
         return _AGENT_KEYWORD_HINTS[agent_name.lower().strip()]
 

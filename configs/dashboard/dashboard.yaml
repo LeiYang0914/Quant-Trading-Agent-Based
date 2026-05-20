@@ -1,0 +1,42 @@
+# LLM Router Dashboard Configuration
+# ====================================
+
+dashboard:
+  title: "LLM Router Dashboard"
+  port: 8501
+  host: "localhost"
+
+  # Log file paths (relative to project root)
+  logs:
+    usage_log: "logs/llm/usage.jsonl"
+    routing_log: "reports/llm_routing/routing_log.jsonl"
+
+  # Auto-refresh settings
+  refresh:
+    enabled: false
+    interval_seconds: 30
+
+  # Page visibility
+  pages:
+    overview: true
+    providers: true
+    agents: true
+    costs: true
+    routing: true
+    failures: true
+    cache: true
+    health: true
+
+  # Charts
+  charts:
+    requests_over_time:
+      bucket_minutes: 60
+    cost_over_time:
+      bucket_days: 1
+
+  # Security: never display these fields
+  redact_fields:
+    - api_key
+    - _api_key
+    - ANTHROPIC_API_KEY
+    - DEEPSEEK_API_KEY

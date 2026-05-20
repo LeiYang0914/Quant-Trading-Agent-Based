@@ -73,6 +73,26 @@ fallback_rules:
     allowed: true
     note: "DeepSeek→Claude always allowed as fallback"
 
+# ── Forbidden fallback rules (hard blocks) ─────────────────
+
+forbidden_fallback:
+  # These task types MUST NOT fall back to a lower-capability provider
+  no_fallback_tasks:
+    - CODE_GENERATION
+    - CODE_PLANNING
+    - CODE_REVIEW
+    - DEBUGGING
+    - RISK_REVIEW
+  # If requires_code is true, fallback is blocked regardless of task_type
+  no_fallback_if_code_required: true
+  # Risk-critical tasks never fall back to low-cost providers
+  risk_never_low_cost: true
+  # Agents whose tasks should never fallback (review and risk agents)
+  no_fallback_agents:
+    - review-agent
+    - risk-agent
+  allow_override: false  # even metadata override cannot bypass these rules
+
 # ── Safety constraints ────────────────────────────────────
 
 safety:

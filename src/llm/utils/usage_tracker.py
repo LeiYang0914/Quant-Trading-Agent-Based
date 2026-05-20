@@ -40,6 +40,7 @@ class UsageTracker:
         fallback_used: bool = False,
         success: bool = True,
         latency_ms: Optional[int] = None,
+        dry_run: bool = False,
     ) -> None:
         """Record a single LLM call."""
         entry = {
@@ -57,6 +58,7 @@ class UsageTracker:
             "fallback_used": fallback_used,
             "success": success,
             "latency_ms": latency_ms,
+            "dry_run": dry_run,
         }
         with open(self._usage_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(entry, ensure_ascii=False) + "\n")

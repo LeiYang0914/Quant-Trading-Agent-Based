@@ -4,6 +4,20 @@ Important project decisions and their rationale.
 
 ---
 
+## 2026-05-20 — CRYPTO-002 Conditional Pass with Five Implementation Conditions
+
+### Decision: CRYPTO-002 (OI-Price Divergence Reversal) passes review with conditions attached
+**What:** The Review Agent evaluated CRYPTO-002 and issued a CONDITIONAL PASS -- approved for programmer handoff, but only if five mandatory conditions are satisfied in the backtest.
+**Why:** The economic mechanism (OI-price divergence as reversal signal, grounded in Bessembinder & Seguin 1993 and Matsui et al. 2022) is sound, no lookahead bias was found, data exists (with quality caveats), and there is low overlap with existing approved ideas (CRYPTO-001, CRYPTO-003). However, the core concept (four-quadrant framework) is textbook material with low novelty, meaning the edge depends entirely on quantitative operationalization. The five conditions ensure the backtest validates genuine alpha rather than data-mined parameters or spurious patterns.
+**Conditions:** (1) Control test: OI-enhanced must outperform pure price reversal benchmark. (2) Data quality filter: OI-volume reconciliation must be operational and filtering rate reported. (3) Parameter sensitivity: performance must be reported across threshold/lookback/decile sweeps. (4) Regime-conditional: performance must be broken out by trending vs. range-bound regimes. (5) Out-of-sample: parameters optimized on 2019-2022, tested on 2023-2025.
+**Falsification criterion:** If the OI-enhanced signal does not meaningfully outperform a pure price reversal control (same lookback, same holding period, no OI), the alpha must be rejected -- this is the memo's own Open Question #3.
+
+### Decision: "Conditional pass" as a formal review outcome
+**What:** The Review Agent introduced a third review outcome beyond Approved and Rejected: Conditional Pass. This means the idea is approved in principle but the backtest must satisfy specific, testable conditions before the alpha can move to Risk Agent review or paper trading.
+**Why:** Not all ideas fit neatly into binary approve/reject. Some alphas have sound mechanisms but unresolved empirical questions that can only be answered by backtesting. Conditional pass allows the idea to move forward while ensuring the empirical tests are actually performed. If conditions are not met, the alpha is rejected regardless of standalone performance. This is stricter than a simple approval because it attaches binding requirements.
+
+---
+
 ## 2026-05-15 — Five-Agent System Architecture
 
 ### Decision: Restructure from research workspace to five-agent Quant Trading AI System

@@ -11,9 +11,9 @@ Ideas queued for research, grouped by domain. Process in order: crypto first, th
 | Alpha ID | Title | Status | Priority | References | Data Status | Next Action |
 |----------|-------|--------|----------|------------|-------------|-------------|
 | CRYPTO-001 | Funding Rate Carry and Crowding Signal — delta-neutral BTC/ETH funding carry with crowding reversal overlay | Complete — Memo #01 | High | Sufficient (7 papers) | Available | Handed off to programmer |
-| CRYPTO-002 | OI-Price Divergence Reversal — rising OI + price divergence as directional reversal signal | ready_for_review | High | Sufficient (5 sources, 4 papers) | Available | Ready for Review Agent gate |
+| CRYPTO-002 | OI-Price Divergence Reversal — rising OI + price divergence as directional reversal signal | Conditional Pass — handed off | High | Sufficient (5 sources, 4 papers) | Available | Handed off to programmer. See `handoffs/pending/CRYPTO-002_oi_divergence_reversal.md` (5 conditions). |
 | CRYPTO-003 | Cross-Sectional Altcoin Funding Carry — long high-FR, short low-FR across top 20 alts | Complete — Memo #03 | High | Sufficient (7 papers) | Available | Handed off to programmer |
-| CRYPTO-004 | DEX Venue Funding Carry — Drift Protocol / ApolloX carry premium vs CEX | Not started | High | Partial (ScienceDirect 2025) | Unknown | Needs lit review: DEX vs CEX carry premium |
+| CRYPTO-004 | DEX Venue Funding Carry — Drift Protocol / ApolloX carry premium vs CEX | ready_for_review | High | Sufficient (10 sources: 6 academic + 4 official docs) | Unknown -- needs Data Agent check | Awaiting Review Agent evaluation. Memo: `research/memos/crypto/04_dex_venue_funding_carry.md` |
 
 ### Medium Priority
 
@@ -64,7 +64,7 @@ Ideas queued for research, grouped by domain. Process in order: crypto first, th
 1. **Default domain order:** crypto → commodities → cross_market.
 2. Commodities research begins only after crypto priorities are complete or when explicitly requested.
 3. New ideas: added to the correct domain table with next available alpha ID.
-4. Status progression: Not started → Researching → needs_data_check → ready_for_review → (Review Agent) → ready_for_backtest.
+4. Status progression: Not started → Researching → needs_data_check → ready_for_review → (Review Agent) → conditional_pass | approved | rejected → ready_for_backtest.
 5. References status: None → Partial → Sufficient (2+ credible, 1+ Tier 1/2).
 6. Data status: Unknown → Needs check → Available → Unavailable.
 7. Ideas are never deleted. Rejected ideas move to `research/ideas/rejected/{domain}/`.
@@ -73,7 +73,7 @@ Ideas queued for research, grouped by domain. Process in order: crypto first, th
 
 | Domain | Total | Complete | In Progress | Not Started |
 |--------|-------|----------|-------------|-------------|
-| Crypto | 8 | 2 | 1 | 5 |
+| Crypto | 8 | 3 | 1 | 4 |
 | Commodities | 3 | 0 | 0 | 3 |
 | Cross-market | 2 | 0 | 0 | 2 |
-| **Total** | **13** | **2** | **1** | **10** |
+| **Total** | **13** | **3** | **1** | **9** |

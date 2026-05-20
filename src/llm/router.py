@@ -154,7 +154,7 @@ class LLMRouter:
 
         # Fallback on failure
         if not response.success and request.fallback_allowed and decision.fallback_provider:
-            if not self._fallback_allowed_for_task(request.task_type, request.requires_code):
+            if not self._fallback_allowed_for_task(request.task_type, request.requires_code, request.agent_name):
                 logger.warning(
                     "Fallback blocked for task_type=%s requires_code=%s",
                     request.task_type.value,
@@ -545,11 +545,26 @@ class LLMRouter:
         cfg = self.models_config.get(provider.value, {})
         return cfg.get("timeout_seconds", 120)
 
-    def _fallback_allowed_for_task(self, task_type: TaskType, requires_code: bool) -> bool:
+    def _fallback_allowed_for_task(self, task_type: TaskType, requires_code: bool, agent_name: str = "") -> bool:
+        # Hardcoded defaults
         if task_type in _NO_CODE_FALLBACK_TASKS:
             return False
         if requires_code:
             return False
+
+        # Read forbidden_fallback from routing_rules.yaml if present
+        fb_cfg = self.routing_rules.get("forbidden_fallback", {})
+        if fb_cfg.get("no_fallback_if_code_required") and requires_code:
+            return False
+        no_fb_tasks = fb_cfg.get("no_fallback_tasks", [])
+        if task_type.value in no_fb_tasks:
+            return False
+        if fb_cfg.get("risk_never_low_cost") and task_type == TaskType.RISK_REVIEW:
+            return False
+        no_fb_agents = fb_cfg.get("no_fallback_agents", [])
+        if no_fb_agents and any(a in agent_name.lower() for a in no_fb_agents):
+            return False
+
         return True
 
     def _record_usage(
@@ -573,6 +588,7 @@ class LLMRouter:
             fallback_used=response.fallback_used,
             success=response.success,
             latency_ms=response.latency_ms,
+            dry_run=self.dry_run,
         )
 
     def _update_circuit(self, response: LLMResponse, provider: str) -> None:

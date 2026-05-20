@@ -25,24 +25,27 @@ Type:  PAPER | OFFICIAL | DATA | PRACT
 
 | Source ID | Authors | Year | Title | Venue | DOI/arXiv/SSRN | URL | Tier | Ideas Supported | Verified |
 |-----------|---------|------|-------|-------|----------------|-----|------|-----------------|----------|
-| CRYPTO-PAPER-001 | He, Manela, Ross, von Wachter | 2022 | Fundamentals of Perpetual Futures | arXiv | arXiv:2212.06888 | https://arxiv.org/abs/2212.06888 | 1 | CRYPTO-001, CRYPTO-003 | Yes |
-| CRYPTO-PAPER-002 | Schmeling, Schrimpf, Todorov | 2023 | Crypto Carry | BIS WP No. 1087 | — | https://www.bis.org/publ/work1087.htm | 1 | CRYPTO-001, CRYPTO-003 | Yes |
+| CRYPTO-PAPER-001 | He, Manela, Ross, von Wachter | 2022 | Fundamentals of Perpetual Futures | arXiv | arXiv:2212.06888 | https://arxiv.org/abs/2212.06888 | 1 | CRYPTO-001, CRYPTO-003, CRYPTO-004 | Yes |
+| CRYPTO-PAPER-002 | Schmeling, Schrimpf, Todorov | 2023 | Crypto Carry | BIS WP No. 1087 | — | https://www.bis.org/publ/work1087.htm | 1 | CRYPTO-001, CRYPTO-003, CRYPTO-004 | Yes |
 | CRYPTO-PAPER-003 | Christin, Routledge, Soska, Zetlin-Jones | — | The Crypto Carry Trade | CMU Working Paper | — | https://www.cmu.edu/tepper/faculty-and-research/research/working-papers/ | 1 | CRYPTO-001 | Yes |
-| CRYPTO-PAPER-004 | Fan, Jiao, Lu, Tong | 2024 | The Risk and Return of Cryptocurrency Carry Trade | SSRN | SSRN:4666425 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4666425 | 1 | CRYPTO-001, CRYPTO-003 | Yes |
-| CRYPTO-PAPER-005 | Ackerer, Hugonnier, Jermann | 2025 | Perpetual Futures Pricing | Mathematical Finance | DOI:10.1111/mafi.12442 | https://onlinelibrary.wiley.com/doi/10.1111/mafi.12442 | 1 | CRYPTO-001 | Yes |
-| CRYPTO-PAPER-006 | Inan | 2025 | Predictability of Funding Rates | SSRN | SSRN:5576424 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5576424 | 1 | CRYPTO-001, CRYPTO-003 | Yes |
+| CRYPTO-PAPER-004 | Fan, Jiao, Lu, Tong | 2024 | The Risk and Return of Cryptocurrency Carry Trade | SSRN | SSRN:4666425 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4666425 | 1 | CRYPTO-001, CRYPTO-003, CRYPTO-004 | Yes |
+| CRYPTO-PAPER-005 | Ackerer, Hugonnier, Jermann | 2025 | Perpetual Futures Pricing | Mathematical Finance | DOI:10.1111/mafi.12442 | https://onlinelibrary.wiley.com/doi/10.1111/mafi.12442 | 1 | CRYPTO-001, CRYPTO-004 | Yes |
+| CRYPTO-PAPER-006 | Inan | 2025 | Predictability of Funding Rates | SSRN | SSRN:5576424 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5576424 | 1 | CRYPTO-001, CRYPTO-003, CRYPTO-004 | Yes |
 | CRYPTO-PAPER-007 | Liu, Tsyvinski, Wu | 2022 | Common Risk Factors in Cryptocurrency | Journal of Finance | DOI:10.1111/jofi.13195 | https://onlinelibrary.wiley.com/doi/10.1111/jofi.13195 | 1 | CRYPTO-001, CRYPTO-003 | Yes |
 | CRYPTO-PAPER-008 | Giagkiozis & Said | 2024 | Reconciling Open Interest with Traded Volume in Perpetual Swaps | Ledger, Vol. 9 | arXiv:2310.14973 | https://arxiv.org/abs/2310.14973 | 1 | CRYPTO-002 | Yes |
 | CRYPTO-PAPER-009 | Matsui, Al-Ali, Knottenbelt | 2022 | On the Dynamics of Solid, Liquid and Digital Gold Futures | IEEE ICBC 2022 | arXiv:2202.09845 | https://arxiv.org/abs/2202.09845 | 1 | CRYPTO-002 | Yes |
-| CRYPTO-PAPER-010 | Chen, Ma, Nie | 2024 | Exploring the Impact: How Decentralized Exchange Designs Shape Traders' Behavior on Perpetual Future Contracts | arXiv | arXiv:2402.03953 | https://arxiv.org/abs/2402.03953 | 1 | CRYPTO-002 | Yes |
+| CRYPTO-PAPER-010 | Chen, Ma, Nie | 2024 | Exploring the Impact: How Decentralized Exchange Designs Shape Traders' Behavior on Perpetual Future Contracts | arXiv | arXiv:2402.03953 | https://arxiv.org/abs/2402.03953 | 1 | CRYPTO-002, CRYPTO-004 | Yes |
 | CRYPTO-PAPER-011 | Bessembinder & Seguin | 1993 | Price Volatility, Trading Volume, and Market Depth: Evidence from Futures Markets | JFQA, Vol. 28, No. 1 | — | https://www.jstor.org/stable/2331234 | 1 | CRYPTO-002 | Yes |
 
 ## Crypto — Official / Institutional
 
 | Source ID | Organization | Year | Title | URL | Tier | Ideas Supported | Verified |
 |-----------|-------------|------|-------|-----|------|-----------------|----------|
-| CRYPTO-OFFICIAL-001 | ScienceDirect | 2025 | Exploring Risk and Return Profiles of Funding Rate Arbitrage on CEX and DEX | https://www.sciencedirect.com/ | 2 | CRYPTO-001, CRYPTO-003 | Yes |
+| CRYPTO-OFFICIAL-001 | ScienceDirect | 2025 | Exploring Risk and Return Profiles of Funding Rate Arbitrage on CEX and DEX | https://www.sciencedirect.com/science/article/pii/S1544612325001130 | 2 | CRYPTO-001, CRYPTO-003, CRYPTO-004 | Yes |
 | CRYPTO-OFFICIAL-002 | BitMEX | 2025 | Q3 Derivatives Report | https://blog.bitmex.com/ | 2 | CRYPTO-001 | Yes |
+| CRYPTO-OFFICIAL-003 | Drift Protocol | 2025 | Drift Protocol Documentation: Funding Rates | https://docs.drift.trade/protocol/trading/perpetuals-trading/funding-rates | 2 | CRYPTO-004 | Yes |
+| CRYPTO-OFFICIAL-004 | Hyperliquid | 2025 | Hyperliquid Documentation: Perpetual Funding | https://hyperliquid.gitbook.io/hyperliquid-docs/trading/funding | 2 | CRYPTO-004 | Yes |
+| CRYPTO-OFFICIAL-005 | ApolloX Finance | 2025 | ApolloX Finance Documentation | https://apollox-finance.gitbook.io/apollox-finance | 2 | CRYPTO-004 | Yes |
 
 ## Crypto — Practitioner
 
@@ -68,6 +71,13 @@ Type:  PAPER | OFFICIAL | DATA | PRACT
 | CRYPTO-DATA-008 | Glassnode Pro | On-chain and derivatives metrics | CRYPTO-001 | Paid |
 | CRYPTO-DATA-009 | CryptoQuant | Exchange flows, on-chain data | CRYPTO-001 | Paid |
 | CRYPTO-DATA-010 | CoinGecko API | Cryptocurrency market cap, circulating supply, trading volume (daily) | CRYPTO-003 | Free tier; point-in-time universe construction |
+| CRYPTO-DATA-011 | Drift Protocol API/SDK | Drift v2 funding rates, perp mark prices, oracle prices, Rebate Pool balances, open interest | CRYPTO-004 | Solana-native; historical depth unknown; on-chain indexing may be needed |
+| CRYPTO-DATA-012 | Hyperliquid API | Hyperliquid perp funding rates, mark prices, open interest, volume | CRYPTO-004 | L1-native API; hourly funding data; historical depth to be verified |
+| CRYPTO-DATA-013 | ApolloX API | ApolloX V1/V2 funding rates, mark prices, volume | CRYPTO-004 | BSC/Arbitrum; V1/V2 migration discontinuity possible |
+| CRYPTO-DATA-014 | Dune Analytics | Community dashboards for Drift, Hyperliquid, ApolloX; SQL-queryable on-chain data | CRYPTO-004 | Free tier; requires dashboard creation; best candidate for historical DEX funding rate reconstruction |
+| CRYPTO-DATA-015 | Flipside Crypto | On-chain data for Solana, BSC, Arbitrum; SQL-queryable | CRYPTO-004 | Free tier; alternative to Dune |
+| CRYPTO-DATA-016 | The Graph | Subgraph-based indexing for Drift, ApolloX | CRYPTO-004 | Requires subgraph deployment or use of existing community subgraphs |
+| CRYPTO-DATA-017 | DefiLlama | Protocol TVL, fee revenue, insurance fund balances | CRYPTO-004 | Free API; used for protocol risk assessment, not signal computation |
 
 ---
 
@@ -109,7 +119,7 @@ Type:  PAPER | OFFICIAL | DATA | PRACT
 
 | Domain | Tier 1 | Tier 2 | Tier 3 | Data Vendors | Total |
 |--------|--------|--------|--------|-------------|-------|
-| Crypto | 11 | 2 | 5 | 10 | 28 |
+| Crypto | 11 | 5 | 5 | 17 | 38 |
 | Commodities | 0 | 0 | 0 | 0 | 0 |
 | Cross-market | 0 | 0 | 0 | 0 | 0 |
-| **Total** | **11** | **2** | **5** | **10** | **28** |
+| **Total** | **11** | **5** | **5** | **17** | **38** |

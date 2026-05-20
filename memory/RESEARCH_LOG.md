@@ -4,6 +4,97 @@ Dated entries for each research session.
 
 ---
 
+## 2026-05-20 — CRYPTO-004 DEX Venue Funding Carry (Session 9)
+
+**Session type:** Alpha research
+**Session domain:** crypto
+
+### Activity
+
+Full 9-skill research sequence on CRYPTO-004: DEX Venue Funding Carry (Drift Protocol / ApolloX carry premium vs CEX).
+
+### Skills Executed
+
+1. **Domain Queue Management:** Declared crypto domain. Selected CRYPTO-004 as highest-priority incomplete crypto idea.
+2. **Source Discovery:** Discovered and verified 8 sources (5 pre-existing from CRYPTO-001/003 sessions, 3 new official protocol docs). WebSearch non-functional (deepseek-reasoner error -- same as sessions 4 and 6). Used WebFetch to access Drift Protocol, Hyperliquid, and ApolloX documentation directly.
+3. **Paper Analysis:** Reviewed Chen et al. (2024) (arXiv:2402.03953) for DEX architecture classification and behavioral findings. Re-extracted ScienceDirect (2025) findings from CRYPTO-001 memo.
+4. **Crypto Market Structure:** Documented structural differences between DEX funding mechanisms (Drift vAMM hourly lazy, Hyperliquid oracle-CLOB hourly, ApolloX dual-oracle 8-hourly) and CEX funding mechanisms (CLOB 8-hourly). Identified five structural drivers of DEX carry premium: capital pool fragmentation, vAMM inventory effects, execution friction, lazy settlement, and Rebate Pool capping.
+5. **Alpha Discovery:** Created alpha discovery note at `research/ideas/proposed/crypto/CRYPTO-004_dex_funding_carry.md`. Progressed through all 11 layers from observation to evidence. Applied 6 quality filters.
+6. **Memo Writing:** Wrote 19-section research memo at `research/memos/crypto/04_dex_venue_funding_carry.md`. Followed template exactly. Plain English throughout.
+7. **Quality Control:** Ran 20-item QC checklist across 5 categories. All 20 items PASS. No issues requiring fixes.
+8. **Handoff Preparation:** Review handoff prepared (discovery note + memo). Programmer handoff deferred until Review Agent approval.
+9. **Memory Update:** Updated all 5 memory files.
+
+### Key Findings
+
+**DEX funding mechanisms structurally differ from CEX:**
+
+| Feature | CEX (Binance) | DEX (Drift) | DEX (Hyperliquid) | DEX (ApolloX) |
+|---------|---------------|-------------|-------------------|---------------|
+| Pricing | CLOB | vAMM | Oracle-CLOB | Oracle-based |
+| Funding interval | 8h | 1h (lazy) | 1h | 8h |
+| Funding cap | 0.375%/8h | 0.125-0.417%/1h | 4%/1h | Unspecified |
+| Arbitrage capital | Global CEX USD | Solana USDC | Bridged USDC | BSC/Arbitrum USDC |
+
+**Five structural drivers of DEX carry premium:**
+1. **Capital pool fragmentation:** Each DEX blockchain requires native settlement assets. CEX arbitrageurs must bridge capital, incurring cost, delay, and bridge risk.
+2. **vAMM inventory effects (Drift):** AMM price drifts above oracle when retail longs dominate, directly increasing the funding rate. No passive liquidity provision to absorb the imbalance.
+3. **Lazy funding settlement (Drift):** Funding only settles on user interaction. Can delay payments for hours in low-activity markets.
+4. **On-chain execution friction:** Gas costs, confirmation times, and potential MEV add to arbitrage costs.
+5. **Rebate Pool cap (Drift):** Funding receipts capped at 2/3 of Rebate Pool balance. When funding is most positive (optimal carry entry), the pool may be depleted.
+
+**ScienceDirect (2025) empirical evidence (extracted from CRYPTO-001):**
+- CEX funding carry: negative Sharpe ratios by 2024-2025
+- DEX carry (Drift, ApolloX): Sharpe 6.5--23.6, 115% returns over 6 months
+- Zero correlation to HODL strategies
+
+**Six falsification conditions identified:**
+1. DEX spread compresses to near-zero (mirroring CEX compression)
+2. Smart contract exploit causes fund loss
+3. Execution/gas/bridge costs consume gross spread
+4. ScienceDirect findings are sample-specific (6-month window)
+5. Drift Rebate Pool systematically caps receipts during high-funding periods
+6. Regulatory action shuts down DEX perpetuals
+
+**Research confidence: medium (6-8/10 across dimensions).** Economic mechanism is sound but confidence constrained by: (a) unverified DEX data availability (Data Agent check needed), (b) paywalled primary empirical source (ScienceDirect 2025), and (c) cross-chain execution complexity.
+
+### Sources Reviewed
+
+| Ref ID | Title | Tier | New? |
+|--------|-------|------|------|
+| CRYPTO-OFFICIAL-001 | Exploring Risk and Return Profiles of Funding Rate Arbitrage on CEX and DEX | 2 | No (used in CRYPTO-001) |
+| CRYPTO-PAPER-010 | How Decentralized Exchange Designs Shape Traders' Behavior | 1 | No (used in CRYPTO-002) |
+| CRYPTO-PAPER-001 | Fundamentals of Perpetual Futures | 1 | No |
+| CRYPTO-PAPER-002 | Crypto Carry (BIS WP 1087) | 1 | No |
+| CRYPTO-PAPER-004 | The Risk and Return of Cryptocurrency Carry Trade | 1 | No |
+| CRYPTO-PAPER-005 | Perpetual Futures Pricing (Mathematical Finance) | 1 | No |
+| CRYPTO-PAPER-006 | Predictability of Funding Rates | 1 | No |
+| CRYPTO-OFFICIAL-003 | Drift Protocol Docs: Funding Rates | 2 | Yes |
+| CRYPTO-OFFICIAL-004 | Hyperliquid Docs: Perpetual Funding | 2 | Yes |
+| CRYPTO-OFFICIAL-005 | ApolloX Finance Docs | 2 | Yes |
+
+### Outputs Created
+
+- `research/ideas/proposed/crypto/CRYPTO-004_dex_funding_carry.md` — Alpha discovery note
+- `research/memos/crypto/04_dex_venue_funding_carry.md` — Research memo (19 sections)
+- `memory/SOURCE_TRACKER.md` — Updated: 10 new entries (3 official docs, 7 data vendors), 6 existing entries updated with CRYPTO-004 support
+- `memory/ALPHA_BACKLOG.md` — CRYPTO-004: Not started → ready_for_review, references: Partial → Sufficient (10)
+- `memory/PROJECT_STATE.md` — Updated with session results
+- `memory/RESEARCH_LOG.md` — This entry
+
+### Tool Performance
+
+- **WebSearch:** Non-functional throughout session (persistent "400 deepseek-reasoner does not support this tool_choice" error). This is the same issue documented in sessions 4, 6, and 9. All web discovery was done via WebFetch to known URLs.
+- **WebFetch:** Functional. Successfully retrieved content from: arxiv.org, drift.trade docs, hyperliquid.gitbook.io, apollox-finance.gitbook.io. Failed on: sciencedirect.com (403 paywall), dydx.exchange (404/500), researchgate.net (403), scholar.google.com (CAPTCHA), several other blocked sites.
+- **Impact:** The ScienceDirect (2025) paper -- the central empirical source -- could not be independently verified. All findings from this paper are second-hand from the CRYPTO-001 memo extraction.
+
+### Next Session
+
+- **Recommended domain:** crypto
+- **Recommended action:** Invoke Review Agent to evaluate CRYPTO-004. Key review questions: (1) Is the structural mechanism convincing enough despite unverified DEX data availability? (2) Is the paywalled primary source (ScienceDirect 2025) a blocker? (3) Should the Data Agent confirm DEX funding rate history availability before or after review?
+
+---
+
 ## 2026-05-17 — LLM Router Production Upgrade (Session 6)
 
 **Session type:** Architecture — infrastructure upgrade
@@ -106,6 +197,33 @@ Built the LLM Router infrastructure layer that sits beneath all five agents. Age
 - `system/architecture/system_overview.md` — Added LLM Router to architecture diagram, directory map, and invariants
 - All 5 agent specs — Added "LLM Router Usage" section with provider-per-activity tables
 - `memory/` files — PROJECT_STATE.md, RESEARCH_LOG.md, DECISIONS.md, SYSTEM_MAP.md
+
+---
+
+## 2026-05-20 — CRYPTO-002 Review Gate & Programmer Handoff (Sessions 7-8)
+
+**Session type:** Review Agent gate + programmer handoff
+
+### Activity
+
+1. **Review Agent** evaluated CRYPTO-002 (OI-Price Divergence Reversal) — **CONDITIONAL PASS** with 5 mandatory conditions: control test vs pure price reversal, operational data quality filter, parameter sensitivity analysis, regime-conditional performance reporting, and out-of-sample validation. No lookahead bias. Low overlap with existing ideas.
+2. **Programmer handoff** created with all 5 conditions embedded as validation checks.
+
+### Files Created
+
+- `research/ideas/reviewed/CRYPTO-002_review.md` — Full review report with decision, checklist, condition specifications, and risk notes
+- `handoffs/pending/CRYPTO-002_oi_divergence_reversal.md` — Programmer handoff with 12 sections + 5 mandatory validation checks
+
+### Files Updated
+
+- `memory/ALPHA_BACKLOG.md` — CRYPTO-002: conditional_pass → handed off
+- `memory/PROJECT_STATE.md` — Status updated, next priorities shifted to CRYPTO-004
+- `memory/DECISIONS.md` — Two new decisions recorded (review outcome, condition specification)
+- `memory/RESEARCH_LOG.md` — This entry
+
+### Next Step
+
+Research Agent is available for CRYPTO-004 (DEX Venue Funding Carry) or Programmer Agent can begin implementing CRYPTO-002 backtest.
 
 ### Key Design Decisions
 

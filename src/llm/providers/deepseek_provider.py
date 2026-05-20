@@ -1,6 +1,7 @@
 """DeepSeek provider.
 
-Reads DEEPSEEK_API_KEY from environment. Model names are configurable via models.yaml.
+Reads DEEPSEEK_API_KEY from environment or .env file (via python-dotenv).
+Model names are configurable via models.yaml.
 Uses OpenAI-compatible API. If the openai SDK is not installed, returns a clear error
 without crashing.
 """
@@ -10,9 +11,12 @@ import os
 import time
 from typing import Any, Optional
 
+from ..utils.env_loader import load_dotenv_if_available
 from .base import BaseProvider
 
 logger = logging.getLogger("llm_router.deepseek")
+
+load_dotenv_if_available()
 
 try:
     from openai import OpenAI

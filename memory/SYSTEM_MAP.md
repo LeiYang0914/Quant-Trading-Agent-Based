@@ -8,6 +8,7 @@ A quick-reference map of the Quant Trading AI System directory structure.
 .
 ├── README.md                  — Project overview (human-readable)
 ├── CLAUDE.md                  — Claude Code instructions (agent-readable)
+├── pyproject.toml             — Python project metadata and dependencies
 ├── .claude/agents/            — Agent personality definitions (5 agents)
 ├── memory/                    — Persistent project state (session-to-session)
 ├── research/                  — Alpha research outputs (domain-separated)
@@ -96,11 +97,13 @@ research/
 |------|---------|
 | `architecture/system_overview.md` | Full system architecture with agent diagram and LLM Router |
 | `architecture/llm_router_design.md` | LLM Router architecture: provider abstraction, routing, fallback |
+| `architecture/llm_dashboard_design.md` | LLM Dashboard architecture: layers, data flow, security, chart strategy |
 | `architecture/obsidian_integration_design.md` | Obsidian vault integration design |
 | `workflows/alpha_lifecycle.md` | Complete alpha lifecycle from idea to live candidate |
 | `protocols/research_protocol.md` | Research Agent 10-step workflow with quality gates |
 | `protocols/handoff_protocol.md` | Inter-agent handoff formats and rules |
 | `protocols/llm_routing_protocol.md` | LLM routing protocol: request format, rules, fallback, forbidden behavior |
+| `protocols/llm_dashboard_protocol.md` | LLM Dashboard protocol: launch, navigation, metrics, security rules |
 | `agent_specs/research-agent.md` | Research Agent detailed specification |
 | `agent_specs/review-agent.md` | Review Agent detailed specification |
 | `agent_specs/programmer-agent.md` | Programmer Agent detailed specification |
@@ -128,13 +131,14 @@ research/
 | `llm/providers/base.py` | BaseProvider abstract interface (call, validate_config, health_check) |
 | `llm/providers/claude_provider.py` | Claude (Anthropic) provider — real SDK wiring, graceful degradation |
 | `llm/providers/deepseek_provider.py` | DeepSeek provider — OpenAI-compatible SDK, graceful degradation |
-| `llm/prompts/task_classifier.py` | Keyword-based task classification, complexity/cost/long-context inference |
+| `llm/prompts/task_classifier.py` | Three-tier task classification: keyword map → activity hints → agent fallback; complexity/cost/long-context inference |
 | `llm/utils/logging.py` | RoutingLogger — JSONL audit log |
 | `llm/utils/cost_estimator.py` | Rough per-call cost estimation |
 | `llm/utils/cache.py` | ResponseCache — file-based JSON index with TTL, eviction, exclusions |
 | `llm/utils/rate_limiter.py` | RateLimiter — sliding-window per-provider rate limiting |
 | `llm/utils/circuit_breaker.py` | CircuitBreaker — CLOSED→OPEN→HALF_OPEN→CLOSED state machine |
 | `llm/utils/usage_tracker.py` | UsageTracker — JSONL-based cost/performance tracking with aggregation |
+| `llm/utils/env_loader.py` | Env loader — loads .env via python-dotenv if installed |
 | `data/` | Data loaders, API adapters, vendor integrations |
 | `signals/` | Signal/alpha implementations |
 | `backtest/` | Backtest engines and utilities |
@@ -143,16 +147,31 @@ research/
 | `portfolio/` | Portfolio construction and optimization |
 | `utils/` | Shared utilities |
 
+### `src/dashboard/` — LLM Router Dashboard
+| Path | Purpose |
+|------|---------|
+| `app.py` | Main Streamlit app: 8 pages, sidebar navigation, empty state handling |
+| `backend/log_reader.py` | Read usage.jsonl and routing_log.jsonl with time/limit filters |
+| `backend/metrics_service.py` | Pure-function metrics: overview, providers, agents, failures, cache |
+| `backend/aggregation.py` | Group-by and time-bucket aggregation helpers |
+| `backend/health_service.py` | Router health check with API key redaction, offline fallback |
+| `components/metric_cards.py` | Metric card renderers: overview, provider, agent cards |
+| `components/charts.py` | Plotly charts: requests over time, cost over time, distributions |
+| `components/tables.py` | Dataframe tables: routing, failures, agent summary, cost |
+| `components/filters.py` | Sidebar filter controls and filter logic |
+
 ### `scripts/` — CLI and Utility Scripts
 | Path | Purpose |
 |------|---------|
 | `scripts/llm_router_cli.py` | LLM Router CLI: health check, usage summary, cache management |
+| `scripts/run_dashboard.py` | Launch the LLM Router Dashboard in default browser |
 
 ### `configs/` — Configuration
 | Path | Purpose |
 |------|---------|
 | `llm/models.yaml` | LLM provider model configs (Claude, DeepSeek) |
 | `llm/routing_rules.yaml` | Routing rules, overrides, fallback, per-agent mappings |
+| `dashboard/dashboard.yaml` | Dashboard config: port, log paths, refresh, page visibility, charts, redaction |
 | `markets/` | Market definitions, trading hours, contract specs |
 | `strategies/` | Strategy parameters (lookbacks, thresholds, weights) |
 | `data/` | Data vendor configs, fee schedules, slippage models |
@@ -163,12 +182,14 @@ research/
 |------|---------|
 | `llm/test_router.py` | LLM Router routing decision tests (30 tests) |
 | `llm/test_router_advanced.py` | Advanced router tests: ask(), health, cache, circuits (16 tests) |
+| `llm/test_router_production.py` | Production-readiness tests: provider config, health check, cache, rate limiter, circuit breaker, usage tracker, ask(), fallback, classifier, CLI (69 tests) |
 | `llm/test_task_classification.py` | Task classifier keyword and complexity tests (16 tests) |
 | `llm/test_fallbacks.py` | Fallback behavior and permissions tests (6 tests) |
 | `llm/test_cache.py` | Response cache operations and exclusions (13 tests) |
 | `llm/test_circuit_breaker.py` | Circuit breaker state machine tests (11 tests) |
 | `llm/test_rate_limiter.py` | Rate limiter acquire/block/reset tests (8 tests) |
 | `llm/test_usage_tracker.py` | Usage tracker recording and aggregation tests (11 tests) |
+| `dashboard/` | Dashboard backend tests: log_reader, metrics_service, aggregation, health_service |
 | `data/` | Data loader tests |
 | `signals/` | Signal logic tests |
 | `backtest/` | Backtest correctness tests |

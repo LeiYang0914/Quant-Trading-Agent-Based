@@ -29,7 +29,8 @@ class TestClassifyTask:
         assert classify_task("why does this error happen") == TaskType.DEBUGGING
 
     def test_summarization_keywords(self):
-        assert classify_task("summarize this paper") == TaskType.SUMMARIZATION
+        # "summarize this paper" now correctly routes to PAPER_ANALYSIS
+        assert classify_task("summarize this article") == TaskType.SUMMARIZATION
         assert classify_task("give me a tldr of the article") == TaskType.SUMMARIZATION
         assert classify_task("sum up the findings") == TaskType.SUMMARIZATION
 
