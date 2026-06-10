@@ -1,6 +1,6 @@
 # Project State
 
-**Last updated:** 2026-05-20 (session 9)
+**Last updated:** 2026-06-11 (session 11)
 
 ## Current Default Research Domain
 
@@ -29,8 +29,8 @@ Five-agent Quant Trading AI System with shared LLM Router infrastructure:
 |-------|---------|--------|
 | Research Agent | Alpha discovery, memos, handoffs — crypto-first domain separation | Active (upgraded 2026-05-15) |
 | Review Agent | Gate between research and programming | Active (reviewed CRYPTO-002 2026-05-20) |
-| Programmer Agent | Implement approved ideas, run backtests | Defined, not yet active |
-| Data Agent | Data sourcing, quality, execution simulation | Defined, not yet active |
+| Programmer Agent | Implement approved ideas, run backtests | Active (CRYPTO-001 MVP implemented 2026-06-10) |
+| Data Agent | Data sourcing, quality, execution simulation | Active (Glassnode loader built 2026-06-11) |
 | Risk Agent | Final risk gate, position sizing, kill switches | Defined, not yet active |
 | **LLM Router** | **Infrastructure: routes agent tasks to Claude or DeepSeek** | **Implemented 2026-05-17** |
 
@@ -44,7 +44,7 @@ Five-agent Quant Trading AI System with shared LLM Router infrastructure:
 
 | Alpha ID | Title | File | Domain | Status |
 |----------|-------|------|--------|--------|
-| CRYPTO-001 | Funding Rate Carry and Crowding Signal | research/memos/crypto/01_crypto_funding_rate_carry.md | Crypto | Complete, handed off |
+| CRYPTO-001 | Funding Rate Carry and Crowding Signal | research/memos/crypto/01_crypto_funding_rate_carry.md | Crypto | MVP implemented, backtested |
 | CRYPTO-003 | Cross-Sectional Altcoin Funding Rate Carry | research/memos/crypto/03_cross_sectional_altcoin_funding_carry.md | Crypto | Complete, handed off |
 | CRYPTO-004 | DEX Venue Funding Carry | research/memos/crypto/04_dex_venue_funding_carry.md | Crypto | Memo complete, awaiting Review Agent |
 
@@ -85,6 +85,8 @@ None currently.
 
 ## Recent Changes
 
+- 2026-06-11 (session 11): **CRYPTO-001 real data backtest.** Built `src/data/glassnode_loader.py` — reusable Glassnode API client for funding rates, spot OHLC, and open interest. Fetched 3 years of BTC+ETH 1h funding rate and OHLC data (2023-01-01 to 2025-12-31), resampled to 8h. Re-ran CRYPTO-001 backtest with real Glassnode data. Results confirm research memo's prediction: CEX funding carry alpha has compressed to negative (Sharpe -5.35, -25.15% total return net of fees). Gross PnL positive ($8,946 funding+price) but high turnover (8,622% pa) generates $34,101 in fees/slippage. In-sample 2023: -5.03%, out-of-sample 2024-2025: -21.08% — consistent with institutional arbitrage capital compressing the edge. Report at `reports/backtests/CRYPTO-001_funding_rate_carry_backtest_REAL.md`. Data cached at `data/glassnode/`.
+- 2026-06-10 (session 10): **CRYPTO-001 MVP implementation complete.** Programmer Agent implemented the first real trading strategy pipeline for Funding Rate Carry & Crowding Signal. Created 8 source modules across `src/data/`, `src/signals/`, `src/backtest/`, `src/execution/`, and `src/risk/`. Built event-driven backtest engine with strict no-lookahead bias, funding accrual, fee/slippage models, position sizing, drawdown tracking. Wrote 106 unit tests (all passing). Generated synthetic fixture data for testing. Backtest report at `reports/backtests/CRYPTO-001_funding_rate_carry_backtest.md`. Full test suite: 367 passing (2 pre-existing LLM failures unrelated). Next: real Binance API data integration, parameter sweep, ETHUSDT extension.
 - 2026-05-20 (session 9): **CRYPTO-004 DEX Venue Funding Carry research complete.** Full 9-skill sequence executed. Alpha discovery note at `research/ideas/proposed/crypto/CRYPTO-004_dex_funding_carry.md`, memo at `research/memos/crypto/04_dex_venue_funding_carry.md`. Identified 5 structural drivers of DEX carry premium (capital pool fragmentation, vAMM inventory effects, lazy settlement, execution friction, Rebate Pool capping). Documented 10 sources (6 Tier 1, 4 Tier 2), 8 failure modes, 8 open questions. All 20 QC checks PASS. Marked ready_for_review. Defined 6 falsification conditions. WebSearch non-functional (deepseek-reasoner error). ScienceDirect (2025) paper remains paywalled and findings are second-hand from CRYPTO-001. Data availability for DEX funding rate history requires Data Agent verification. Next: Review Agent evaluation.
 - 2026-05-20 (session 8): **CRYPTO-002 programmer handoff.** Created programmer handoff document with 5 mandatory conditions from review embedded as validation checks. Handoff at `handoffs/pending/CRYPTO-002_oi_divergence_reversal.md`. Backlog updated to `handed off`. Project state, alpha backlog, decisions log updated. Next: CRYPTO-004 research or Programmer Agent implementation.
 - 2026-05-20 (session 7): **CRYPTO-002 Review Agent gate.** Review Agent evaluated CRYPTO-002 (OI-Price Divergence Reversal). Verdict: CONDITIONAL PASS with 5 mandatory implementation conditions (control test vs price-only reversal, data quality filter, parameter sensitivity, regime-conditional performance, out-of-sample validation). Review report at `research/ideas/reviewed/CRYPTO-002_review.md`. No lookahead bias found. Low overlap with CRYPTO-001 and CRYPTO-003. Backlog and project state updated. Ready for programmer handoff with conditions attached.

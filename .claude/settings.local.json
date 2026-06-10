@@ -106,7 +106,15 @@
       "WebFetch(domain:ideas.repec.org)",
       "WebFetch(domain:api.dydx.exchange)",
       "WebFetch(domain:econpapers.repec.org)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(PYTHONPATH=. python scripts/run_crypto001_backtest.py)",
+      "Bash(PYTHONPATH=. python -m pytest tests/backtest/ tests/signals/ tests/data/ tests/execution/ tests/risk/ -q --tb=short)",
+      "Bash(PYTHONPATH=. python -m pytest tests/ --q --tb=no)",
+      "Bash(PYTHONPATH=. python -m pytest tests/ -q --tb=no)",
+      "Bash(Get-Content *)",
+      "WebFetch(domain:api.glassnode.com)",
+      "Bash(PYTHONPATH=. python scripts/fetch_glassnode_data.py)",
+      "Bash(PYTHONPATH=. python scripts/run_crypto001_backtest_real.py)"
     ]
   }
 }

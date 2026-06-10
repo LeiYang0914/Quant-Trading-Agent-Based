@@ -10,7 +10,7 @@ Ideas queued for research, grouped by domain. Process in order: crypto first, th
 
 | Alpha ID | Title | Status | Priority | References | Data Status | Next Action |
 |----------|-------|--------|----------|------------|-------------|-------------|
-| CRYPTO-001 | Funding Rate Carry and Crowding Signal — delta-neutral BTC/ETH funding carry with crowding reversal overlay | Complete — Memo #01 | High | Sufficient (7 papers) | Available | Handed off to programmer |
+| CRYPTO-001 | Funding Rate Carry and Crowding Signal — delta-neutral BTC/ETH funding carry with crowding reversal overlay | MVP implemented — backtested 2026-06-10 | High | Sufficient (7 papers) | Available | Backtest report: `reports/backtests/CRYPTO-001_funding_rate_carry_backtest.md`. Next: real data, parameter sweep. |
 | CRYPTO-002 | OI-Price Divergence Reversal — rising OI + price divergence as directional reversal signal | Conditional Pass — handed off | High | Sufficient (5 sources, 4 papers) | Available | Handed off to programmer. See `handoffs/pending/CRYPTO-002_oi_divergence_reversal.md` (5 conditions). |
 | CRYPTO-003 | Cross-Sectional Altcoin Funding Carry — long high-FR, short low-FR across top 20 alts | Complete — Memo #03 | High | Sufficient (7 papers) | Available | Handed off to programmer |
 | CRYPTO-004 | DEX Venue Funding Carry — Drift Protocol / ApolloX carry premium vs CEX | ready_for_review | High | Sufficient (10 sources: 6 academic + 4 official docs) | Unknown -- needs Data Agent check | Awaiting Review Agent evaluation. Memo: `research/memos/crypto/04_dex_venue_funding_carry.md` |

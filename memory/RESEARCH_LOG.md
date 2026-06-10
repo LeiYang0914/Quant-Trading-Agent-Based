@@ -4,6 +4,109 @@ Dated entries for each research session.
 
 ---
 
+## 2026-06-11 — Programmer Agent: CRYPTO-001 Real Data Backtest
+
+**Agent:** Programmer Agent + Data Agent  
+**Alpha:** CRYPTO-001 — Funding Rate Carry and Crowding Signal (real data)  
+
+### What was done
+
+Replaced synthetic data with real Glassnode API data and re-ran the full CRYPTO-001 backtest.
+
+**New module:** `src/data/glassnode_loader.py`
+- Reusable Glassnode API client following the same pattern as `glassnode_btc_etf_flows.py`
+- Supports: `fetch_funding_rate()`, `fetch_spot_ohlc()`, `fetch_spot_close()`, `fetch_open_interest()`
+- Automatic pagination with configurable chunk sizes
+- Exponential backoff retry (429, 5xx)
+- Returns clean DataFrames with UTC timestamps
+
+**Data fetched (Glassnode API):**
+- BTC funding rates (1h): 26,280 rows → resampled to 3,285 rows at 8h
+- BTC spot OHLC (1h): 26,280 rows → resampled to 3,285 rows at 8h
+- ETH funding rates (1h): 26,280 rows → resampled to 3,285 rows at 8h
+- ETH spot OHLC (1h): 26,280 rows → resampled to 3,285 rows at 8h
+- Cached at `data/glassnode/` (Parquet format)
+- Period: 2023-01-01 to 2025-12-31
+
+**New scripts:**
+- `scripts/fetch_glassnode_data.py` — easy data refresh
+- `scripts/run_crypto001_backtest_real.py` — real-data backtest runner
+
+### Real Data Results
+
+| Metric | Full (2023-2025) | In-sample (2023) | Out-of-sample (2024-2025) |
+|--------|-----------------|------------------|--------------------------|
+| Total return | -25.15% | -5.03% | -21.08% |
+| Sharpe ratio | -5.35 | -4.07 | -5.90 |
+| Max drawdown | 26.27% | 6.13% | 22.02% |
+| Funding PnL | +$3,350 | — | — |
+| Price PnL | +$5,596 | — | — |
+| Fees | -$22,734 | — | — |
+| Slippage | -$11,367 | — | — |
+
+**Key finding:** Confirms research memo's prediction — CEX funding carry alpha
+has compressed to near-zero or negative due to institutional arbitrage capital.
+Gross PnL is positive but high turnover (8,622% pa, 1,932 trades) erodes all
+alpha in fees and slippage.
+
+**Next:** Turnover reduction (higher rebalance threshold, minimum holding period,
+daily rebalance), ETHUSDT extension, DEX venue comparison, parameter sweep.
+
+### Full test suite
+366 passed, 3 failed (pre-existing dashboard/LLM failures — no API keys)
+
+---
+
+## 2026-06-10 — Programmer Agent: CRYPTO-001 MVP Implementation
+
+**Agent:** Programmer Agent  
+**Alpha:** CRYPTO-001 — Funding Rate Carry and Crowding Signal  
+
+### What was done
+
+Implemented the first real trading strategy pipeline for the Quant Trading AI System:
+
+**Source modules created (8 files):**
+- `src/data/schema.py` — Canonical data types (FundingRateRecord, OHLCVRecord, MarketDataBundle)
+- `src/data/funding_rate_loader.py` — CSV-based funding rate loader + synthetic data generator
+- `src/data/ohlcv_loader.py` — CSV-based OHLCV loader + synthetic data generator
+- `src/signals/funding_rate_carry.py` — CRYPTO-001 signal: carry weight + crowding reversal, strict no-lookahead
+- `src/backtest/event_backtester.py` — Event-driven backtest engine with position tracking, funding accrual, fee/slippage
+- `src/backtest/metrics.py` — Full performance metrics (Sharpe, Sortino, Calmar, max DD, win rate, turnover)
+- `src/execution/fee_model.py` — Maker/taker fee model (default: 2/4 bps)
+- `src/execution/slippage_model.py` — Linear-in-notional slippage model
+- `src/risk/position_sizing.py` — Multi-constraint position sizer (NAV%, leverage, ATR, liquidity)
+- `src/risk/drawdown.py` — Drawdown tracker with warning (10%) and critical (20%) levels
+
+**Tests (106 unit tests, all passing):**
+- `tests/data/test_funding_rate_loader.py` (12 tests)
+- `tests/signals/test_funding_rate_carry.py` (25 tests)
+- `tests/backtest/test_metrics.py` (16 tests)
+- `tests/backtest/test_event_backtester.py` (13 tests)
+- `tests/execution/test_fee_model.py` (9 tests)
+- `tests/execution/test_slippage_model.py` (9 tests)
+- `tests/risk/test_drawdown.py` (13 tests)
+- `tests/risk/test_position_sizing.py` (9 tests)
+
+**Backtest report:** `reports/backtests/CRYPTO-001_funding_rate_carry_backtest.md`
+
+### Key design decisions
+- Event-driven execution with bar-by-bar iteration (signal at bar t close → execute at bar t+1 open)
+- Positions persist across bars until signal changes beyond rebalance threshold
+- Funding accrues on open perp positions each bar using the last settled rate
+- Strict no-lookahead verified by unit tests
+- Synthetic data only — real Binance API data needed for credible backtest results
+
+### Full test suite status
+367 passed, 2 failed (pre-existing LLM provider config validation failures — no API keys configured)
+
+### Next steps
+1. Pull real Binance BTC/ETH funding rate + OHLCV data via API
+2. Run parameter sweep on lookback, thresholds, holding period
+3. Extend to ETHUSDT
+4. Walk-forward validation with expanding windows
+5. Cost stress testing
+
 ## 2026-05-20 — CRYPTO-004 DEX Venue Funding Carry (Session 9)
 
 **Session type:** Alpha research
