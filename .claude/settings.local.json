@@ -87,7 +87,26 @@
       "WebFetch(domain:binance-docs.github.io)",
       "WebFetch(domain:docs.coinglass.com)",
       "WebFetch(domain:coinglass.com)",
-      "WebFetch(domain:developers.binance.com)"
+      "WebFetch(domain:developers.binance.com)",
+      "Bash(git push *)",
+      "PowerShell(git *)",
+      "Bash(python *)",
+      "Bash(pip list *)",
+      "Bash(findstr -i pytest)",
+      "Bash(pip install *)",
+      "Bash(New-Item *)",
+      "Bash(Remove-Item *)",
+      "Bash(start *)",
+      "WebFetch(domain:docs.drift.trade)",
+      "WebFetch(domain:apollox-finance.gitbook.io)",
+      "WebFetch(domain:hyperliquid.gitbook.io)",
+      "WebFetch(domain:docs.dydx.exchange)",
+      "WebFetch(domain:docs.gmx.io)",
+      "WebFetch(domain:dydx.exchange)",
+      "WebFetch(domain:ideas.repec.org)",
+      "WebFetch(domain:api.dydx.exchange)",
+      "WebFetch(domain:econpapers.repec.org)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

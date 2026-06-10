@@ -5,5 +5,6 @@
   "textFontFamily": "Inter",
   "monospaceFontFamily": "JetBrains Mono",
   "interfaceFontFamily": "Inter",
-  "showViewHeader": true
+  "showViewHeader": true,
+  "theme": "obsidian"
 }
