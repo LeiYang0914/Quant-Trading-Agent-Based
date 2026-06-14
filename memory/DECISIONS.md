@@ -4,6 +4,21 @@ Important project decisions and their rationale.
 
 ---
 
+## 2026-06-14 — API Key Security: Env-Var-Only Policy for All Credentials
+
+### Decision: All API keys must be environment-variable-only — no hardcoded fallbacks
+**What:** All API keys (Glassnode, Anthropic, DeepSeek) MUST be read from environment variables or the gitignored `.env` file. Hardcoded fallback values in source code are prohibited.
+**Why:** A Glassnode API key was accidentally hardcoded as a fallback in `glassnode_loader.py` and `glassnode_btc_etf_flows.py` (`os.getenv("GLASSNODE_API_KEY") or "32YB16..."`). The key was committed and pushed to GitHub, making it publicly accessible. The git history required a `filter-branch` scrub and force push to clean. The key is now being rotated on Glassnode.
+**Remediation applied:**
+1. Removed hardcoded fallback from both files — env var only, with clear ValueError when unset
+2. Added key to gitignored `.env` file
+3. Set persistent Windows user-level environment variable `GLASSNODE_API_KEY`
+4. Scrubbed entire git history via `git filter-branch --tree-filter`
+5. Force-pushed cleaned history to GitHub
+6. Started Glassnode key rotation (in progress — user must complete at glassnode.com)
+
+---
+
 ## 2026-05-20 — CRYPTO-002 Conditional Pass with Five Implementation Conditions
 
 ### Decision: CRYPTO-002 (OI-Price Divergence Reversal) passes review with conditions attached
