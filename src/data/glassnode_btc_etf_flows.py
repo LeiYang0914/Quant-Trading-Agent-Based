@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime, timezone
 from dateutil import parser as dtparser
 
-GLASSNODE_API_KEY = os.getenv("GLASSNODE_API_KEY") or "REDACTED_ROTATE_THIS_KEY"
+GLASSNODE_API_KEY = os.getenv("GLASSNODE_API_KEY", "")
 
 BASE_URL = "https://api.glassnode.com"
 ENDPOINT = "/v1/metrics/institutions/purpose_etf_flows_sum"
@@ -33,6 +33,12 @@ def fetch_purpose_etf_flows(asset="BTC",
     Fetch Purpose Bitcoin ETF flows (sum) from Glassnode.
     Returns DataFrame with columns: time, flow, asset, interval
     """
+    if not GLASSNODE_API_KEY:
+        raise ValueError(
+            "GLASSNODE_API_KEY is not set. "
+            "Set it via PowerShell: $env:GLASSNODE_API_KEY = 'your-key', "
+            "or add it to the project .env file."
+        )
     if end is None:
         end = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 

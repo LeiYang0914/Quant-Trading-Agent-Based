@@ -24,7 +24,7 @@ import requests
 
 
 # Default API key — prefers env var, falls back to hardcoded key from user's script.
-_DEFAULT_API_KEY = os.getenv("GLASSNODE_API_KEY") or "REDACTED_ROTATE_THIS_KEY"
+_DEFAULT_API_KEY = os.getenv("GLASSNODE_API_KEY", "")
 
 BASE_URL = "https://api.glassnode.com"
 
@@ -89,6 +89,12 @@ def _fetch_paginated(
         Columns: ``[timestamp, value]`` (plus ``asset``, ``interval``).
     """
     key = api_key or _DEFAULT_API_KEY
+    if not key:
+        raise ValueError(
+            "GLASSNODE_API_KEY is not set. "
+            "Set it via PowerShell: $env:GLASSNODE_API_KEY = 'your-key', "
+            "or add it to the project .env file."
+        )
     if end is None:
         end = int(datetime.now(timezone.utc).timestamp())
     else:
